@@ -56,6 +56,10 @@ class Api {
                 }
                 break;
 
+            case 'filter-products':
+                echo json_encode($this->productController->filterProducts());
+                break;
+
             default:
                 echo json_encode([
                     "status" => "error",

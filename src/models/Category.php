@@ -9,7 +9,6 @@ class Category {
     }
 
     public function getAll() {
-        echo "hi";
         $sql = "SELECT * FROM {$this->table}";
         $result = $this->db->query($sql);
 

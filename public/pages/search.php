@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetSmart - Search</title>
+    <script defer src="../assets/js/search-page.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,9 +16,6 @@
         font-family: 'Signika', sans-serif;
         font-size: 18px;
         }
-        /* h1, h2, h3, h4, h5, h6 {
-        font-family: 'Unica One', sans-serif;
-        } */
     </style>
 </head>
 <body class="bg-[#F8F8F8]">
@@ -44,75 +42,35 @@
             <div class="w-[400px] flex-shrink-0">
                 <div class="mb-6">
                     <h2 class="font-semibold mb-2">Select Category</h2>
-                    <select class="w-full p-2 border rounded bg-white">
-                        <option>Pick an option</option>
-                        <option>Food & Treats</option>
+                    <select id="category-select" class="w-full p-2 border rounded bg-white">
+                        <option value="default" selected>Pick an option</option>
                     </select>
                 </div>
 
                 <div class="mb-6">
                     <h2 class="font-semibold mb-2">Filter by Price</h2>
-                    <select class="w-full p-2 border rounded bg-white">
-                        <option>Pick an option</option>
-                        <option value="lkr-0-lkr-2500">LKR 0 - LKR 2,500</option>
-                        <option value="lkr-2500-lkr-5000">LKR 2,500 - LKR 5,000</option>
-                        <option value="lkr-5000-lkr-7500">LKR 5,000 - LKR 7,500</option>
-                        <option value="lkr-7500-lkr-10000">LKR 7,500 - LKR 10,000</option>
+                    <select id="price-select" class="w-full p-2 border rounded bg-white">
+                        <option value="default" selected>Pick an option</option>
+                        <option value="0-9.99">$0 - $9.99</option>
+                        <option value="9.99-19.99">$9.99 - $19.00</option>
+                        <option value="19.99-49.99">$19.99 - $49.00</option>
+                        <option value="49.99-99.99">$49.99 - $99.00</option>
                     </select>
                 </div>
 
                 <div class="flex justify-between items-center mb-2">
-                    <button class="bg-green-500 text-white rounded py-2 px-4 w-1/2 mr-2">Apply Filters</button>
-                    <button class="bg-green-500 text-white rounded py-2 px-4 w-1/2">Clear Filters</button>
+                    <button class="bg-green-500 text-white rounded py-2 px-4 w-1/2 mr-2" onclick="applyFilters()">Apply Filters</button>
+                    <button class="bg-green-500 text-white rounded py-2 px-4 w-1/2" onclick="clearFilters()">Clear Filters</button>
                 </div>
-                <button class="w-full bg-green-500 text-white rounded py-2">Get All Items</button>
+                <button onclick="getAllItems()" class="w-full bg-green-500 text-white rounded py-2">Get All Items</button>
             </div>
 
             <!-- Product Grid -->
             <div class="flex-1">
-                <h2 class="text-xl font-semibold mb-6">Filtered Items (3)</h2>
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="bg-white p-4 rounded shadow">
-                        <div class="h-48 w-full flex items-center justify-center overflow-hidden mb-4">
-                            <img src="../assets/images/premium-box.png" alt="Original Blend" class="object-cover h-full w-full"/>
-                        </div>
-                        <div class="mb-4">
-                            <h3 class="text-xl font-semibold mb-2">Original Blend</h3>
-                            <p class="text-gray-600">Organic Paws Kangaroo Recipe offers a natural, balanced meal for cats and dogs of all ages.</p>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-semibold">$5.99</span>
-                            <button class="bg-green-500 text-white px-4 py-2 rounded">Add to Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-4 rounded shadow">
-                        <div class="h-48 w-full flex items-center justify-center overflow-hidden mb-4">
-                            <img src="../assets/images/basic-box.webp" alt="Original Blend" class="object-cover h-full w-full"/>
-                        </div>
-                        <div class="mb-4">
-                            <h3 class="text-xl font-semibold mb-2">Original Blend</h3>
-                            <p class="text-gray-600">Organic Paws Kangaroo Recipe offers a natural, balanced meal for cats and dogs of all ages.</p>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-semibold">$5.99</span>
-                            <button class="bg-green-500 text-white px-4 py-2 rounded">Add to Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-4 rounded shadow">
-                        <div class="h-48 w-full flex items-center justify-center overflow-hidden mb-4">
-                            <img src="../assets/images/main-logo.png" alt="Original Blend" class="object-cover h-full w-full"/>
-                        </div>
-                        <div class="mb-4">
-                            <h3 class="text-xl font-semibold mb-2">Original Blend</h3>
-                            <p class="text-gray-600">Organic Paws Kangaroo Recipe offers a natural, balanced meal for cats and dogs of all ages.</p>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-semibold">$5.99</span>
-                            <button class="bg-green-500 text-white px-4 py-2 rounded">Add to Cart</button>
-                        </div>
-                    </div>
+                <div id="results-title">
+                    <!-- <h2 class="text-xl font-semibold mb-6">Filtered Items (3)</h2> -->
+                </div>
+                <div id="filtered-products" class="grid grid-cols-2 gap-6">
                 </div>
             </div>
         </div>
@@ -124,7 +82,7 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-3 gap-8">
                 <div>
-                    <img src="/api/placeholder/150/50" alt="PetSmart Logo" class="mb-4"/>
+                    <img src="" alt="PetSmart Logo" class="mb-4"/>
                     <p class="text-sm">Caring for Pets, Simplifying Your Life!</p>
                 </div>
                 

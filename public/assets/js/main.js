@@ -1,9 +1,10 @@
 // API URL
-const apiUrl = "http://localhost/cb011999/routes.php/get-all-products";
+const fetchAllProducts =
+  "http://localhost/cb011999/routes.php/get-all-products";
 
 async function fetchProducts() {
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(fetchAllProducts);
     const data = await response.json();
 
     if (data.status === "success") {

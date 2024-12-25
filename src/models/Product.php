@@ -77,6 +77,52 @@ class Product {
         }
         throw new \Exception("Error preparing statement");
     }
+
+    public function filterByCategoryAndOrPriceRange($category = null, $minPrice = null, $maxPrice = null) {
+
+        $sql = "SELECT * FROM {$this->table} WHERE 1=1";
+        $types = "";
+        $params = [];
+
+        if ($category && $category !== 'default') {
+            $sql .= " AND category_id = ?";
+            $types .= "s";
+            $params[] = $category;
+        }
+        
+        // Add price range filter if provided
+        if ($minPrice !== null) {
+            $sql .= " AND price >= ?";
+            $types .= "d";
+            $params[] = $minPrice;
+        }
+        
+        if ($maxPrice !== null  ) {
+            $sql .= " AND price <= ?";
+            $types .= "d";
+            $params[] = $maxPrice;
+        }
+
+        $stmt = $this->db->prepare($sql);
+
+        if ($stmt) {
+            if (!empty($params)) {
+                $stmt->bind_param($types, ...$params);
+            }
+            
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            $products = [];
+            while ($row = $result->fetch_assoc()) {
+                $products[] = $row;
+            }
+            
+            return $products;
+        }
+        
+        throw new \Exception("Error preparing statement");
+    }
 }
 
 ?>

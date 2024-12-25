@@ -96,6 +96,25 @@ class ProductController {
         }
     }
 
+    public function filterProducts() {  // Changed to public
+        $category = isset($_GET['category']) ? $_GET['category'] : null;
+        $minPrice = isset($_GET['minPrice']) ? floatval($_GET['minPrice']) : null;
+        $maxPrice = isset($_GET['maxPrice']) ? floatval($_GET['maxPrice']) : null;
+    
+        try {
+            $products = $this->productModel->filterByCategoryAndOrPriceRange($category, $minPrice, $maxPrice);
+            return [
+                "status" => "success",
+                "data" => $products
+            ];
+        } catch (\Exception $e) {
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     private function validateProductData($data) {
         $requiredFields = [
             'name' => 'string',
