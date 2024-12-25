@@ -2,10 +2,12 @@
 class Api {
     private $productController;
     private $categoryController;
+    private $blogController;
 
     public function __construct() {
         $this->productController = new ProductController();
         $this->categoryController = new CategoryController();
+        $this->blogController = new BlogController();
     }
 
     public function handleRequest() {
@@ -46,6 +48,10 @@ class Api {
                 }
                 break;
 
+            case 'filter-products':
+                echo json_encode($this->productController->filterProducts());
+                break;
+
             case 'get-all-categories':
                 echo json_encode($this->categoryController->getAllCategories());
                 break;
@@ -56,9 +62,13 @@ class Api {
                 }
                 break;
 
-            case 'filter-products':
-                echo json_encode($this->productController->filterProducts());
+            case 'get-all-blogs':
+                echo json_encode($this->blogController->getAllBlogs());
                 break;
+            
+            case 'get-latest-blog':
+                echo json_encode($this->blogController->getLatestBlog());
+                break;    
 
             default:
                 echo json_encode([
