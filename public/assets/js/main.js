@@ -25,12 +25,14 @@ function renderProducts(products) {
   products.forEach((product) => {
     const productCard = `
                     <div class="bg-white shadow-md rounded-lg overflow-hidden flex-shrink-0 w-[450px]">
-                      <img src="${product.image}" alt="${
+                      <img src="${product.image_url}" alt="${
       product.name
     }" class="w-full h-48 object-cover">
                       <div class="p-4">
                         <h3 class="text-xl font-bold mb-2">${product.name}</h3>
-                        <p class="text-gray-600 mb-4">${product.description}</p>
+                        <p class="text-gray-600 mb-4">${
+                          product.short_description
+                        }</p>
                         <div class="flex justify-between items-center">
                           <span class="text-green-500 font-bold">$${Number(
                             product.price

@@ -125,7 +125,7 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-3 gap-8">
                 <div>
-                    <img src="/api/placeholder/150/50" alt="PetSmart Logo" class="mb-4"/>
+                    <img src="" alt="PetSmart Logo" class="mb-4"/>
                     <p class="text-sm">Caring for Pets, Simplifying Your Life!</p>
                 </div>
                 
