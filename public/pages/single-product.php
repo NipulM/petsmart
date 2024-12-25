@@ -17,6 +17,22 @@ try {
     }
 
     $product_details = $product['data'];
+
+    $api_url_categories = "http://localhost/CB011999/public/api.php/get-category-by-id?id=${product_details['category_id']}";
+
+    try {
+        $category_data = file_get_contents($api_url_categories);
+        $category = json_decode($category_data, true);
+
+        if (!$category || $category['status'] !== 'success' || empty($category['data'])) {
+            throw new Exception("Category not found");
+        }
+
+        $category_details = $category['data'];
+    } catch (Exception $e) {
+        $category_details = null;
+    }
+
 } catch (Exception $e) {
     header('Location: ../index.php');
     exit;
@@ -86,10 +102,10 @@ try {
                     <h1 class="text-3xl font-bold mb-4"><?php echo htmlspecialchars($product_details['name']); ?></h1>
                     
                     <!-- Categories/Tags -->
-                    <?php if (!empty($product_details['category_id'])): ?>
+                    <?php if (!empty($category_details['name'])): ?>
                     <div class="mb-4">
                         <span class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-600 mr-2">
-                            #<?php echo htmlspecialchars($product_details['category_id']); ?>
+                            #<?php echo htmlspecialchars($category_details['name']); ?>
                         </span>
                     </div>
                     <?php endif; ?>
