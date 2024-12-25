@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetSmart - Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="../assets/js/about-page.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,18 +86,7 @@
 
         <!-- Care & Comfort Section -->
         <h2 id="blogs" class="text-2xl font-bold mb-7">Care & Comfort Corner</h2>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div class="flex w-full">
-                <div class="w-2/5">
-                <div class="relative w-full h-[300px] m-5">
-                    <img src="../assets/images/blog-test.png" alt="Dog grooming" class="absolute top-0 left-0 w-full h-full object-cover rounded-2xl">
-                </div>
-                </div>
-                <div class="w-3/5 p-12">
-                    <h3 class="text-xl font-bold mb-4">5 Easy Grooming Tips for a Happier Pet</h3>
-                    <p class="text-gray-700">Keeping your pet clean and well-groomed is essential for their health and happiness. From regular brushing to choosing the right shampoo, small efforts can make a big difference. Whether you're a seasoned pet parent or a newbie, these quick grooming tips will have your furry friend looking and feeling their best in no time!</p>
-                </div>
-            </div>
+        <div id="blog-container" class="bg-white rounded-lg shadow-lg overflow-hidden">
         </div>
     </main>
 

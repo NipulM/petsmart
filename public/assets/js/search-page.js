@@ -125,12 +125,21 @@ async function applyFilters() {
 
 async function getAllItems() {
   const products = await fetchAllProducts();
+  console.log(products);
 
   const categorySelect = document.getElementById("category-select");
   const priceRangeSelect = document.getElementById("price-select");
 
   categorySelect.selectedIndex = 0;
   priceRangeSelect.selectedIndex = 0;
+
+  const resultsTitle = document.getElementById("results-title");
+  resultsTitle.textContent = "";
+
+  resultsTitle.insertAdjacentHTML(
+    "beforeend",
+    `<h2 class="text-xl font-semibold mb-6">All Items (${products.length})</h2>`
+  );
 
   renderItems(products);
 }

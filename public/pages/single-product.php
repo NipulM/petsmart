@@ -61,7 +61,7 @@ try {
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-[#F8F8F8]">
     <!-- Header -->
     <header class="bg-[#F8F8F8] py-4">
       <div class="container mx-auto flex justify-between items-center">
