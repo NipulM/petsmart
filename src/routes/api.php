@@ -1,9 +1,11 @@
 <?php
 class Api {
     private $productController;
+    private $categoryController;
 
     public function __construct() {
         $this->productController = new ProductController();
+        $this->categoryController = new CategoryController();
     }
 
     public function handleRequest() {
@@ -41,6 +43,16 @@ class Api {
                 $data = json_decode(file_get_contents('php://input'), true);
                 if (isset($data['id'])) {
                     echo json_encode($this->productController->deleteProduct($data['id']));
+                }
+                break;
+
+            case 'get-all-categories':
+                echo json_encode($this->categoryController->getAllCategories());
+                break;
+
+            case 'get-category-by-id':
+                if (isset($_GET['id'])) {
+                    echo json_encode($this->categoryController->getCategoryById(intval($_GET['id'])));
                 }
                 break;
 
