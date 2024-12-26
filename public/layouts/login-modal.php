@@ -12,9 +12,9 @@
                 </div>
 
                 <form id="loginForm" class="space-y-4">
-                    <input type="email" placeholder="Email Address" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none" required>
+                    <input id="email" type="email" placeholder="Email Address" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none" required>
                     
-                    <input type="password" placeholder="Password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none" required>
+                    <input id="password" type="password" placeholder="Password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none" required>
                     
                     <div class="flex items-center justify-center">
                         <input type="checkbox" id="keepLoggedIn" class="w-4 h-4 text-purple-600 rounded border-gray-300">

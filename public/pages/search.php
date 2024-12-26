@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetSmart - Search</title>
     <script defer src="../assets/js/search-page.js"></script>
-    <script defer src="../assets/js/auth.js"></script>
+    <script defer src="../assets/js/auth/login.js"></script>
+    <script defer src="../assets/js/auth/register.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">

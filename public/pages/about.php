@@ -6,7 +6,8 @@
     <title>PetSmart - Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="../assets/js/about-page.js"></script>
-    <script defer src="../assets/js/auth.js"></script>
+    <script defer src="../assets/js/auth/login.js"></script>
+    <script defer src="../assets/js/auth/register.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
