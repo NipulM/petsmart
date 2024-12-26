@@ -7,6 +7,36 @@ class UserController {
         $this->userModel = new User();
     }
 
+    public function loginUser($data) {
+        try {
+            if (empty($data['email']) || empty($data['password'])) {
+                http_response_code(400);
+                return [
+                    "status" => "error",
+                    "message" => "All fields are required"
+                ];
+            }
+    
+            $result = $this->userModel->login($data);
+            http_response_code(200);
+            return [
+                "status" => "success",
+                "message" => "Login successful",
+                "data" => $result
+            ];
+        } catch (\Exception $e) {
+            if ($e->getMessage() === "Invalid email or password") {
+                http_response_code(401);
+            } else {
+                http_response_code(500); 
+            }
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function registerUser($data) {
         try {
             $validation = $this->validateUserData($data);
