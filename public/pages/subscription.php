@@ -21,20 +21,8 @@
 </head>
 <body>
     <div id="main-content">
-        <header class="bg-[#F8F8F8] py-4 relative z-10" >
-            <div class="container mx-auto flex justify-between items-center">
-                <a href="../index.php" class="flex items-center">
-                    <img src="../assets/images/main-logo.webp" alt="PetSmart" class="h-14 -ml-4">
-                    <span class="text-gray-800 font-bold text-xl"></span>
-                </a>
-                <nav class="space-x-16">
-                    <a href="./search.php" class="text-gray-600 hover:text-gray-800">Search</a>
-                    <a href="./subscription.php" class="text-red-500"">Subscription</a>
-                    <a href="./about.php" class="text-gray-600 hover:text-gray-800">About Us</a>
-                    <button id="loginBtn" class="text-gray-600 hover:text-gray-800">Login</button>
-                </nav>
-            </div>
-        </header>
+        <!-- Header -->
+        <?php include '../layouts/header.php'; ?>
     
         <main>
             <section class="bg-[#F8F8F8] py-1">
@@ -160,38 +148,8 @@
                 </div>
             </section>
         </main>
-        <footer class="bg-green-500 text-white py-8">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-3 gap-8">
-                    <div>
-                        <img src="/api/placeholder/150/50" alt="PetSmart Logo" class="mb-4"/>
-                        <p class="text-sm">Caring for Pets, Simplifying Your Life!</p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-semibold mb-4">Quick Links</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="hover:underline">Home</a></li>
-                            <li><a href="#" class="hover:underline">Search</a></li>
-                            <li><a href="#" class="hover:underline">Subscription Plans</a></li>
-                            <li><a href="#" class="hover:underline">About us / Blogs</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 class="font-semibold mb-4">Contact Information</h3>
-                        <ul class="space-y-2">
-                            <li>support@petsmart.com</li>
-                            <li>+94 77 071 4178</li>
-                            <li>134/89, Kindamith Str. Ppers Rd.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text-center mt-8 pt-4 border-t border-green-400">
-                    © 2024 PetSmart. All rights reserved.
-                </div>
-            </div>
-        </footer>
+        
+        <?php include '../layouts/footer.php'; ?>
     </div>
 
     <?php include '../layouts/login-modal.php'; ?>

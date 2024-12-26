@@ -1,3 +1,30 @@
+// Get DOM elements
+const loginBtn = document.getElementById("loginBtn");
+const iconsContainer = document.getElementById("iconsContainer");
+const cartCount = document.getElementById("cartCount");
+
+// Function to toggle between login and icons
+function toggleAuthDisplay(isLoggedIn) {
+  if (isLoggedIn) {
+    loginBtn.style.display = "none";
+    iconsContainer.classList.remove("hidden");
+    iconsContainer.classList.add("flex");
+    localStorage.setItem("isLoggedIn", "true");
+  } else {
+    loginBtn.style.display = "block";
+    iconsContainer.classList.add("hidden");
+    iconsContainer.classList.remove("flex");
+    localStorage.setItem("isLoggedIn", "false");
+  }
+}
+
+// Function to update cart count
+function updateCartCount(count) {
+  cartCount.textContent = count;
+  cartCount.classList.toggle("hidden", count === 0);
+}
+
+// Modified handleLogin function
 async function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById("email").value;
@@ -26,6 +53,8 @@ async function handleLogin(e) {
         alert("Logged in successfully!");
         document.getElementById("loginForm").reset();
         document.getElementById("closeLoginModal").click();
+
+        toggleAuthDisplay(true);
       } else {
         alert(data.message);
       }
@@ -36,15 +65,24 @@ async function handleLogin(e) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  toggleAuthDisplay(isLoggedIn);
+
   const mainContent = document.getElementById("main-content");
+  console.log(mainContent);
 
   const loginBtn = document.getElementById("loginBtn");
+  console.log("login btn", loginBtn);
   const loginModal = document.getElementById("loginModal");
+  console.log("login modal", loginModal);
 
   const closeModal = document.getElementById("closeLoginModal");
+  console.log("close modal", closeModal);
   const loginForm = document.getElementById("loginForm");
+  console.log("login form", loginForm);
 
   const registerBtn = document.getElementById("registerBtnRedirect");
+
   const registerModal = document.getElementById("registerModal");
 
   // Open modal
