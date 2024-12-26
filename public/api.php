@@ -11,9 +11,13 @@ require_once '../src/controllers/CategoryController.php';
 require_once '../src/models/Blog.php';
 require_once '../src/controllers/BlogController.php';
 
+require_once '../src/models/User.php';
+require_once '../src/controllers/UserController.php';
+
 require_once '../src/routes/api.php';
 
 $api = new Api();
 $api->handleRequest();
+
 
 ?>

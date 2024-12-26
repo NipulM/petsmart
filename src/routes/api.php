@@ -3,11 +3,13 @@ class Api {
     private $productController;
     private $categoryController;
     private $blogController;
+    private $userController;
 
     public function __construct() {
         $this->productController = new ProductController();
         $this->categoryController = new CategoryController();
         $this->blogController = new BlogController();
+        $this->userController = new UserController();
     }
 
     public function handleRequest() {
@@ -19,6 +21,11 @@ class Api {
         $requestURL = trim(str_replace($scriptName, '', $requestPath), '/');
 
         switch ($requestURL) {
+            case 'register':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->userController->registerUser($data));
+                break;
+
             case 'get-all-products':
                 echo json_encode($this->productController->getAllProducts());
                 break;
