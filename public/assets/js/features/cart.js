@@ -78,6 +78,8 @@ class Cart {
   }
 
   renderItems() {
+    console.log("Rendering cart items");
+    console.log(this.items);
     if (this.items.length === 0) {
       this.itemsContainer.classList.add("hidden");
       this.emptyMessage.classList.remove("hidden");

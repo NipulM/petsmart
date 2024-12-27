@@ -119,7 +119,14 @@ try {
                                 <button class="px-4 py-2 text-gray-600 hover:text-gray-800" onclick="updateQuantity(1)">+</button>
                             </div>
                             <button 
-                                onclick="addToCart(<?php echo $product['id']; ?>)" 
+                                onclick="addToCart([
+                                    <?php echo $product_details['product_id']; ?>, 
+                                    <?php echo $product_details['price']; ?>, 
+                                    '<?php echo htmlspecialchars($product_details['name'], ENT_QUOTES, 'UTF-8'); ?>', 
+                                    '<?php echo htmlspecialchars($product_details['image_url'], ENT_QUOTES, 'UTF-8'); ?>', 
+                                    <?php echo $product_details['stock_quantity']; ?>, 
+                                    '<?php echo htmlspecialchars($category_details['name'], ENT_QUOTES, 'UTF-8'); ?>'
+                                ])"
                                 class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded">
                                 Add to Cart
                             </button>

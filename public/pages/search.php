@@ -55,7 +55,6 @@
                 <!-- Product Grid -->
                 <div class="flex-1">
                     <div id="results-title">
-                        <!-- <h2 class="text-xl font-semibold mb-6">Filtered Items (3)</h2> -->
                     </div>
                     <div id="filtered-products" class="grid grid-cols-2 gap-6">
                     </div>
