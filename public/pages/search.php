@@ -22,7 +22,7 @@
     <!-- Header -->
         <?php include '../layouts/header.php'; ?>
         <!-- Main Content -->
-        <main class="container mx-auto px-4 py-8">
+        <main class="container mx-auto px-4 py-8 mb-6">
             <h1 class="text-3xl font-bold mb-8">Find the Perfect Treats & Supplies <br> <span class="block">for Your Pet!</span> </h1>
             <div class="flex gap-8">
                 <!-- Sidebar -->

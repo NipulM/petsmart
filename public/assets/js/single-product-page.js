@@ -1,3 +1,8 @@
+function getItemQuantity() {
+  const input = document.getElementById("quantity");
+  return parseInt(input.value);
+}
+
 function updateQuantity(change) {
   const input = document.getElementById("quantity");
   const newValue = Math.max(1, parseInt(input.value) + change);
@@ -14,6 +19,7 @@ function saveCartItems(items) {
 }
 
 function addToCart(productDetails) {
+  const itemQuantity = getItemQuantity();
   if (!productDetails || !Array.isArray(productDetails)) {
     console.error("Invalid product details");
     return;
@@ -35,7 +41,7 @@ function addToCart(productDetails) {
 
   if (existingItem) {
     if (existingItem.quantity < product.stockQuantity) {
-      existingItem.quantity += 1;
+      existingItem.quantity += itemQuantity;
       alert("Item quantity increased in cart");
     } else {
       alert("Sorry, no more stock available for this item");
@@ -44,7 +50,7 @@ function addToCart(productDetails) {
   } else {
     cartItems.push({
       ...product,
-      quantity: 1,
+      quantity: itemQuantity,
     });
     alert("Item added to cart");
   }
@@ -52,7 +58,7 @@ function addToCart(productDetails) {
 
   const cartCount = document.getElementById("cartCount");
   if (cartCount) {
-    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalItems = cartItems.length;
     cartCount.textContent = totalItems;
     cartCount.classList.remove("hidden");
   }

@@ -22,7 +22,7 @@
         <!-- Header -->
         <?php include '../layouts/header.php'; ?>
 
-        <main class="container mx-auto px-4 py-8">
+        <main class="container mx-auto px-4 py-8 mb-6">
             <!-- Welcome Section -->
             <h1 class="text-4xl font-bold text-center mb-12">Welcome to PetSmart!</h1>
             

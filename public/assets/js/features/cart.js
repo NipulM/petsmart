@@ -23,17 +23,6 @@ class Cart {
     });
   }
 
-  addItem(item) {
-    const existingItem = this.items.find((i) => i.id === item.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      this.items.push({ ...item, quantity: 1 });
-    }
-    this.saveCart();
-    this.updateCartCount();
-  }
-
   removeItem(itemId) {
     this.items = this.items.filter((item) => item.id !== itemId);
     this.saveCart();
@@ -60,7 +49,7 @@ class Cart {
   }
 
   updateCartCount() {
-    const count = this.items.reduce((total, item) => total + item.quantity, 0);
+    const count = this.items.length;
     const cartCount = document.getElementById("cartCount");
     if (count > 0) {
       cartCount.textContent = count;
@@ -78,8 +67,6 @@ class Cart {
   }
 
   renderItems() {
-    console.log("Rendering cart items");
-    console.log(this.items);
     if (this.items.length === 0) {
       this.itemsContainer.classList.add("hidden");
       this.emptyMessage.classList.remove("hidden");

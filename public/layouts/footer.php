@@ -1,4 +1,4 @@
-        <footer class="bg-green-500 text-white mt-6 py-8">
+        <footer class="bg-green-500 text-white py-8">
             <div class="container mx-auto px-4">
                 <div class="grid grid-cols-3 gap-8">
                     <div>
