@@ -37,7 +37,6 @@ async function handleRegister(e) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const mainContent = document.getElementById("main-content");
   const loginBtn = document.getElementById("loginBtnRedirect");
 
   const loginModal = document.getElementById("loginModal");
@@ -55,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close modal
   const closeModalFn = () => {
     registerModal.classList.add("hidden");
-    mainContent.classList.remove("filter", "blur-sm", "bg-black/50");
     document.body.style.overflow = "auto";
   };
 

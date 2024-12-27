@@ -1,4 +1,3 @@
-// Get DOM elements
 const loginBtn = document.getElementById("loginBtn");
 const iconsContainer = document.getElementById("iconsContainer");
 const cartCount = document.getElementById("cartCount");
@@ -67,10 +66,6 @@ async function handleLogin(e) {
 document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   toggleAuthDisplay(isLoggedIn);
-
-  const mainContent = document.getElementById("main-content");
-
-  const loginBtn = document.getElementById("loginBtn");
   const loginModal = document.getElementById("loginModal");
 
   const closeModal = document.getElementById("closeLoginModal");
@@ -83,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Open modal
   loginBtn.addEventListener("click", () => {
     loginModal.classList.remove("hidden");
-    mainContent.classList.add("filter", "blur-sm");
     document.body.style.overflow = "hidden";
   });
 
@@ -96,7 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close modal
   const closeModalFn = () => {
     loginModal.classList.add("hidden");
-    mainContent.classList.remove("filter", "blur-sm");
     document.body.style.overflow = "auto";
   };
 

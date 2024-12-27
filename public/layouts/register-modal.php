@@ -1,4 +1,4 @@
-    <div id="registerModal" class="hidden fixed inset-0 z-50 ">
+    <div id="registerModal" class="hidden fixed inset-0 bg-black bg-opacity-65 flex items-center justify-center z-50">
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4">
             <div class="relative bg-white rounded-2xl shadow-lg p-8">
                 <button id="closeRegisterModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
