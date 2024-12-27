@@ -60,7 +60,7 @@ async function handleLogin(e) {
       }
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -69,17 +69,12 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleAuthDisplay(isLoggedIn);
 
   const mainContent = document.getElementById("main-content");
-  console.log(mainContent);
 
   const loginBtn = document.getElementById("loginBtn");
-  console.log("login btn", loginBtn);
   const loginModal = document.getElementById("loginModal");
-  console.log("login modal", loginModal);
 
   const closeModal = document.getElementById("closeLoginModal");
-  console.log("close modal", closeModal);
   const loginForm = document.getElementById("loginForm");
-  console.log("login form", loginForm);
 
   const registerBtn = document.getElementById("registerBtnRedirect");
 

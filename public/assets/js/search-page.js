@@ -9,7 +9,6 @@ function renderItems(products) {
   productGrid.innerHTML = "";
 
   products.forEach((product) => {
-    console.log(product);
     const productCard = `
                     <div class="bg-white p-4 cursor-pointer hover:shadow-lg transition-shadow rounded shadow" 
                        onclick="window.location.href='../pages/single-product.php?id=${product.product_id}'"
@@ -125,7 +124,6 @@ async function applyFilters() {
 
 async function getAllItems() {
   const products = await fetchAllProducts();
-  console.log(products);
 
   const categorySelect = document.getElementById("category-select");
   const priceRangeSelect = document.getElementById("price-select");

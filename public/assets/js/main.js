@@ -25,7 +25,7 @@ function renderProducts(products) {
   products.forEach((product) => {
     const productCard = `
       <div class="bg-white shadow-md rounded-lg overflow-hidden flex-shrink-0 w-[450px] cursor-pointer hover:shadow-lg transition-shadow"
-           onclick="window.location.href='../public/pages/single-product.php?id=${
+           onclick="window.location.href='../pages/single-product.php?id=${
              product.product_id
            }'">
         <img src="${product.image_url}" alt="${
