@@ -1,6 +1,5 @@
 class Cart {
   constructor() {
-    this.items = JSON.parse(localStorage.getItem("cartItems")) || [];
     this.modal = document.getElementById("cartModal");
     this.cartIcon = document.getElementById("cart-icon");
     this.closeBtn = document.getElementById("closeCartModal");
@@ -9,7 +8,13 @@ class Cart {
     this.totalElement = document.getElementById("cartTotal");
     this.checkoutBtn = document.getElementById("checkoutBtn");
 
+    // Initialize items from localStorage
+    this.loadItems();
     this.init();
+  }
+
+  loadItems() {
+    this.items = JSON.parse(localStorage.getItem("cartItems")) || [];
   }
 
   init() {
@@ -23,7 +28,22 @@ class Cart {
     });
   }
 
+  addItem(item) {
+    this.loadItems();
+    const existingItem = this.items.find((i) => i.id === item.id);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      this.items.push({ ...item, quantity: 1 });
+    }
+
+    this.saveCart();
+    this.updateCartCount();
+  }
+
   removeItem(itemId) {
+    this.loadItems();
     this.items = this.items.filter((item) => item.id !== itemId);
     this.saveCart();
     this.updateCartCount();
@@ -31,6 +51,7 @@ class Cart {
   }
 
   updateQuantity(itemId, quantity) {
+    this.loadItems();
     const item = this.items.find((i) => i.id === itemId);
     if (item) {
       item.quantity = parseInt(quantity);
@@ -49,6 +70,7 @@ class Cart {
   }
 
   updateCartCount() {
+    this.loadItems();
     const count = this.items.length;
     const cartCount = document.getElementById("cartCount");
     if (count > 0) {
@@ -60,6 +82,7 @@ class Cart {
   }
 
   calculateTotal() {
+    this.loadItems();
     return this.items.reduce(
       (total, item) => total + item.price * item.quantity,
       0
@@ -67,6 +90,8 @@ class Cart {
   }
 
   renderItems() {
+    this.loadItems();
+
     if (this.items.length === 0) {
       this.itemsContainer.classList.add("hidden");
       this.emptyMessage.classList.remove("hidden");
@@ -121,6 +146,7 @@ class Cart {
   }
 
   async handleCheckout() {
+    this.loadItems();
     const formData = {
       name: document.getElementById("customerName").value,
       phone: document.getElementById("customerPhone").value,

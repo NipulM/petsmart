@@ -114,9 +114,25 @@ try {
 
                         <div class="flex items-center gap-4">
                             <div class="flex items-center border rounded-lg">
-                                <button class="px-4 py-2 text-gray-600 hover:text-gray-800" onclick="updateQuantity(-1)">-</button>
-                                <input type="number" id="quantity" value="1" min="1" class="w-16 text-center border-x py-2">
-                                <button class="px-4 py-2 text-gray-600 hover:text-gray-800" onclick="updateQuantity(1)">+</button>
+                                <button
+                                    class="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                    onclick="updateQuantity(-1)"
+                                >
+                                    -
+                                </button>
+                                <input
+                                    type="number"
+                                    id="quantity"
+                                    value="1"
+                                    min="1"
+                                    class="w-16 text-center py-2 appearance-none focus:outline-none"
+                                />
+                                <button
+                                    class="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                    onclick="updateQuantity(1)"
+                                >
+                                    +
+                                </button>
                             </div>
                             <button 
                                 onclick="addToCart([
@@ -146,5 +162,13 @@ try {
     <script defer src="../assets/js/auth/login.js"></script>
     <script defer src="../assets/js/auth/register.js"></script>
     <script defer src="../assets/js/features/cart.js"></script>
+
+    <style>
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    </style>
 </body>
 </html>
