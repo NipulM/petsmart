@@ -8,6 +8,8 @@ class Cart {
     this.totalElement = document.getElementById("cartTotal");
     this.checkoutBtn = document.getElementById("checkoutBtn");
 
+    this.userData = null;
+
     // Initialize items from localStorage
     this.loadItems();
     this.init();
@@ -26,6 +28,38 @@ class Cart {
     this.modal.addEventListener("click", (e) => {
       if (e.target === this.modal) this.closeModal();
     });
+  }
+
+  async fetchUserData() {
+    try {
+      const response = await fetch(
+        "http://localhost/CB011999/public/api.php/user-profile"
+      );
+      if (!response.ok) throw new Error("Failed to fetch user data");
+
+      const userData = await response.json();
+      this.userData = userData.data;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      this.showNotification("Failed to load profile data", "error");
+    }
+  }
+
+  popuplateUserData() {
+    const customerName = document.getElementById("customerName");
+    const customerPhone = document.getElementById("customerPhone");
+    const customerEmail = document.getElementById("customerEmail");
+    const customerAddress = document.getElementById("customerAddress");
+
+    if (this.userData) {
+      customerName.value = this.userData.name
+        ? this.userData.name.charAt(0).toUpperCase() +
+          this.userData.name.slice(1)
+        : "";
+      customerPhone.value = this.userData.phone || "";
+      customerEmail.value = this.userData.email || "";
+      customerAddress.value = this.userData.address || "";
+    }
   }
 
   addItem(item) {
@@ -136,7 +170,9 @@ class Cart {
     this.totalElement.textContent = `$${this.calculateTotal().toFixed(2)}`;
   }
 
-  openModal() {
+  async openModal() {
+    await this.fetchUserData();
+    this.popuplateUserData();
     this.renderItems();
     this.modal.classList.remove("hidden");
   }
@@ -149,16 +185,16 @@ class Cart {
     this.loadItems();
     const formData = {
       name: document.getElementById("customerName").value,
-      phone: document.getElementById("customerPhone").value,
+      phone_number: document.getElementById("customerPhone").value,
       email: document.getElementById("customerEmail").value,
       address: document.getElementById("customerAddress").value,
       items: this.items,
-      total: this.calculateTotal(),
+      total_amount: this.calculateTotal(),
     };
 
     if (
       !formData.name ||
-      !formData.phone ||
+      !formData.phone_number ||
       !formData.email ||
       !formData.address
     ) {
@@ -166,12 +202,35 @@ class Cart {
       return;
     }
 
-    console.log("Checkout data:", formData);
+    await this.placeOrder(formData);
+
     this.items = [];
     this.saveCart();
     this.updateCartCount();
     this.closeModal();
     this.showNotification("Order placed successfully");
+  }
+
+  async placeOrder(data) {
+    try {
+      const response = await fetch(
+        "http://localhost/CB011999/public/api.php/place-order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to place order");
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.error("Error placing order:", error);
+      this.showNotification("Failed to place order", "error");
+    }
   }
 
   showNotification(message, type = "success") {
