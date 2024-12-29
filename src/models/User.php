@@ -41,15 +41,14 @@ class User {
                 $token = bin2hex(random_bytes(32));
     
                 // Insert session into database
-                $sql_sessions = "INSERT INTO {$this->sessionsTable} (user_id, token, expires_at) VALUES (?, ?, ?)";
+                $sql_sessions = "INSERT INTO {$this->sessionsTable} (user_id, token) VALUES (?, ?)";
                 $stmt_sessions = $this->db->prepare($sql_sessions);
     
                 if ($stmt_sessions) {
                     $stmt_sessions->bind_param(
-                        "iss",
+                        "is",
                         $user['user_id'],
                         $token,
-                        date('Y-m-d H:i:s', $expirationTime)
                     );
     
                     $stmt_sessions->execute();
@@ -57,7 +56,6 @@ class User {
                         'status' => 'success',
                         'message' => 'Login successful',
                         'token' => $token,
-                        'expires_at' => $expirationTime
                     ];
                 } else {
                     throw new \Exception("Failed to create session");
@@ -108,6 +106,73 @@ class User {
             }
         }
         return null;
+    }
+
+    public function getUserProfile() {
+        // Retrieve the session token from cookies
+        $sessionToken = $_COOKIE['session_token'] ?? null; 
+    
+        if (!$sessionToken) {
+            // Return error if no session token is provided
+            http_response_code(401);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Not authenticated"
+            ]);
+            exit;
+        }
+    
+        // Validate the session token and retrieve the user ID
+        $userId = $this->getUserIdBySessionToken($sessionToken);
+    
+        if (!$userId) {
+            // Return error if the session token is invalid
+            http_response_code(401);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Invalid or expired session"
+            ]);
+            exit;
+        }
+    
+        // Fetch the user profile
+        $profile = $this->getUserProfileByUserId($userId);
+    
+        return $profile;
+    }
+    
+    private function getUserIdBySessionToken($token) {
+        // Query to fetch the session information
+        $sql = "SELECT user_id FROM {$this->sessionsTable} WHERE token = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows === 0) {
+            return null;
+        }
+    
+        $session = $result->fetch_assoc();
+        return $session['user_id'] ?? null;
+    }
+    
+    private function getUserProfileByUserId($userId) {
+        $sql = "SELECT * FROM {$this->table} WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows === 0) {
+            return null;
+        }
+    
+        $profile = $result->fetch_assoc();
+
+        unset($profile['password_hash']);
+    
+        return $profile;
     }
 }
 

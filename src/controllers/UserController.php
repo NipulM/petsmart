@@ -7,6 +7,35 @@ class UserController {
         $this->userModel = new User();
     }
 
+    public function getUserProfile() {
+        try {
+            $profile = $this->userModel->getUserProfile();
+            if ($profile) {
+                // Remove sensitive information :) 
+                unset($profile['password_hash']);
+                
+                http_response_code(200);
+                return [
+                    "status" => "success",
+                    "message" => "Profile retrieved successfully",
+                    "data" => $profile
+                ];
+            } else {
+                http_response_code(404);
+                return [
+                    "status" => "error",
+                    "message" => "Profile not found"
+                ];
+            }
+        } catch (\Exception $e) {
+            http_response_code(500);
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function loginUser($data) {
         try {
             if (empty($data['email']) || empty($data['password'])) {

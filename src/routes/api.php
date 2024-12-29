@@ -4,6 +4,7 @@ class Api {
     private $categoryController;
     private $blogController;
     private $userController;
+    private $sessionTable = 'sessions';
 
     public function __construct() {
         $this->productController = new ProductController();
@@ -21,6 +22,10 @@ class Api {
         $requestURL = trim(str_replace($scriptName, '', $requestPath), '/');
 
         switch ($requestURL) {
+            case 'user-profile':
+                echo json_encode($this->userController->getUserProfile());
+                break;
+
             case 'login':
                 $data = json_decode(file_get_contents('php://input'), true);
                 echo json_encode($this->userController->loginUser($data));
