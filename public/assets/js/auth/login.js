@@ -49,6 +49,12 @@ async function handleLogin(e) {
     if (response.ok) {
       const data = await response.json();
       if (data.status === "success") {
+        document.cookie = `session_token=${
+          data.data.token
+        }; path=/; expires=${new Date(
+          data.data.expires_at * 1000
+        ).toUTCString()}`;
+
         alert("Logged in successfully!");
         document.getElementById("loginForm").reset();
         document.getElementById("closeLoginModal").click();
