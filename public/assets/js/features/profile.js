@@ -14,6 +14,7 @@ class Profile {
 
     // User data
     this.userData = null;
+    this.userOrders = null;
 
     this.init();
   }
@@ -74,9 +75,24 @@ class Profile {
     }
   }
 
+  async fetchUserOrders() {
+    try {
+      const response = await fetch(
+        "http://localhost/CB011999/public/api.php/get-user-orders"
+      );
+      if (!response.ok) throw new Error("Failed to fetch user orders");
+
+      const userOrders = await response.json();
+      this.userOrders = userOrders;
+    } catch (error) {
+      console.error("Error fetching user orders:", error);
+    }
+  }
+
   async openModal() {
     // Fetch user data before showing modal
     await this.fetchUserData();
+    await this.fetchUserOrders();
     this.hideLoader();
 
     if (this.userData) {
@@ -160,6 +176,55 @@ class Profile {
     }
   }
 
+  populateUserOrders() {
+    const ordersTab = document.getElementById("ordersTab");
+    ordersTab.innerHTML = "";
+
+    if (this.userOrders) {
+      this.userOrders.forEach((order) => {
+        const orderCard = `
+                        <div class="space-y-4">
+                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+                          <div class="p-4">
+                            <div class="flex justify-between items-center mb-2">
+                              <div>
+                                <span class="text-sm text-gray-500">Order ID:</span>
+                                <span class="ml-2 font-medium">#ORD-${
+                                  order.order_id
+                                }</span>
+                              </div>
+                              <span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                ${
+                                  order.status
+                                    ? order.status.charAt(0).toUpperCase() +
+                                      order.status.slice(1)
+                                    : ""
+                                }
+                              </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                              <div>
+                                <span class="text-sm text-gray-500">Total Price:</span>
+                                <span class="ml-2 font-medium">$${
+                                  order.total_amount
+                                }</span>
+                              </div>
+                              <div>
+                                <span class="text-sm text-gray-500">Placed Date</span>
+                                <span class="ml-2 font-medium">${
+                                  order.created_at
+                                }</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`;
+
+        ordersTab.insertAdjacentHTML("beforeend", orderCard);
+      });
+    }
+  }
+
   switchTab(selectedTab) {
     this.tabs.forEach((tab) => {
       tab.classList.remove("border-blue-500", "text-blue-600");
@@ -177,6 +242,7 @@ class Profile {
     document.getElementById(targetId).classList.remove("hidden");
 
     if (selectedTab.dataset.tab === "orders") {
+      this.populateUserOrders();
       this.saveBtn.classList.add("hidden");
     } else {
       this.saveBtn.classList.remove("hidden");

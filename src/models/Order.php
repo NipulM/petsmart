@@ -10,6 +10,37 @@ class Order {
         $this->userModel = new User();
     }
 
+    public function getUserOrders() {
+        $profile = $this->userModel->getUserProfile();
+        if (!$profile) {
+            http_response_code(401);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Not authenticated"
+            ]);
+            exit;
+        }
+
+        $sql = "SELECT * FROM {$this->table} WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param("i", $profile['user_id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $orders = [];
+
+            while ($row = $result->fetch_assoc()) {
+                $row['order_items'] = json_decode($row['order_items'], true);
+                $orders[] = $row;
+            }
+
+            return $orders;
+        }
+
+        return [];
+    }
+
     public function placeOrder($data) {
         $profile = $this->userModel->getUserProfile();
         if (!$profile) {

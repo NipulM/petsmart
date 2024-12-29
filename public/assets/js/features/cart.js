@@ -226,7 +226,6 @@ class Cart {
 
       if (!response.ok) throw new Error("Failed to place order");
       const responseData = await response.json();
-      console.log(responseData);
     } catch (error) {
       console.error("Error placing order:", error);
       this.showNotification("Failed to place order", "error");

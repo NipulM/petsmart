@@ -23,6 +23,10 @@ class Api {
         $requestURL = trim(str_replace($scriptName, '', $requestPath), '/');
 
         switch ($requestURL) {
+            case 'get-user-orders':
+                echo json_encode($this->orderController->getUserOrders());
+                break;
+
             case 'place-order':
                 $data = json_decode(file_get_contents('php://input'), true);
                 echo json_encode($this->orderController->placeOrder($data));

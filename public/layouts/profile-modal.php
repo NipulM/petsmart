@@ -120,8 +120,8 @@
     </div>
 
     <!-- Orders Tab Content -->
-    <div id="ordersTab" class="tab-content py-4 hidden">
-      <div class="space-y-4">
+    <div id="ordersTab" class="tab-content py-4 hidden space-y-3">
+      <!-- <div class="space-y-4">
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
           <div class="p-4">
             <div class="flex justify-between items-center mb-2">
@@ -145,7 +145,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Save Button -->
