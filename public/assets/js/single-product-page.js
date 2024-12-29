@@ -42,9 +42,9 @@ function addToCart(productDetails) {
   if (existingItem) {
     if (existingItem.quantity < product.stockQuantity) {
       existingItem.quantity += itemQuantity;
-      alert("Item quantity increased in cart");
+      showNotification("Item quantity increased in cart");
     } else {
-      alert("Sorry, no more stock available for this item");
+      showNotification("Sorry, no more stock available for this item", "error");
       return;
     }
   } else {
@@ -52,7 +52,7 @@ function addToCart(productDetails) {
       ...product,
       quantity: itemQuantity,
     });
-    alert("Item added to cart");
+    showNotification("Item added to cart");
   }
   saveCartItems(cartItems);
 
@@ -62,4 +62,18 @@ function addToCart(productDetails) {
     cartCount.textContent = totalItems;
     cartCount.classList.remove("hidden");
   }
+}
+
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-md shadow-lg ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  } text-white`;
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
 }

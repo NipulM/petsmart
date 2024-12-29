@@ -162,7 +162,7 @@ class Cart {
       !formData.email ||
       !formData.address
     ) {
-      alert("Please fill in all contact information");
+      this.showNotification("Please fill all fields", "error");
       return;
     }
 
@@ -171,7 +171,21 @@ class Cart {
     this.saveCart();
     this.updateCartCount();
     this.closeModal();
-    alert("Order placed successfully!");
+    this.showNotification("Order placed successfully");
+  }
+
+  showNotification(message, type = "success") {
+    const notification = document.createElement("div");
+    notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-md shadow-lg ${
+      type === "success" ? "bg-green-500" : "bg-red-500"
+    } text-white`;
+    notification.textContent = message;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
   }
 }
 

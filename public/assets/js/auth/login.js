@@ -30,7 +30,7 @@ async function handleLogin(e) {
   const password = document.getElementById("password").value;
 
   if (!email || !password) {
-    alert("Please fill all fields");
+    showNotification("Please fill all fields", "error");
     return;
   }
 
@@ -55,13 +55,13 @@ async function handleLogin(e) {
           data.data.expires_at * 1000
         ).toUTCString()}`;
 
-        alert("Logged in successfully!");
+        showNotification("Logged in successfully!");
         document.getElementById("loginForm").reset();
         document.getElementById("closeLoginModal").click();
 
         toggleAuthDisplay(true);
       } else {
-        alert(data.message);
+        showNotification(data.message, "error");
       }
     }
   } catch (error) {
@@ -117,3 +117,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-md shadow-lg ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  } text-white`;
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}

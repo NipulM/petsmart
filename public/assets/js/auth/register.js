@@ -5,7 +5,7 @@ async function handleRegister(e) {
   const password = document.getElementById("password").value;
 
   if (!name || !email || !password) {
-    alert("Please fill all fields");
+    showNotification("Please fill all fields", "error");
     return;
   }
 
@@ -24,11 +24,11 @@ async function handleRegister(e) {
     if (response.ok) {
       const data = await response.json();
       if (data.status === "success") {
-        alert("Registered successfully! Please login to continue");
+        showNotification("Registered successfully! Please login to continue");
         document.getElementById("registerForm").reset();
         document.getElementById("closeRegisterModal").click();
       } else {
-        alert(data.message);
+        showNotification(data.message, "error");
       }
     }
   } catch (error) {
@@ -75,3 +75,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-md shadow-lg ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  } text-white`;
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
