@@ -100,8 +100,9 @@ class Profile {
   populateUserData() {
     // Populate Profile tab
     const profileTab = document.getElementById("profileTab");
-    profileTab.querySelector('input[type="text"]').value =
-      this.userData.name || "";
+    profileTab.querySelector('input[type="text"]').value = this.userData.name
+      ? this.userData.name.charAt(0).toUpperCase() + this.userData.name.slice(1)
+      : "";
     profileTab.querySelector('input[type="email"]').value =
       this.userData.email || "";
     profileTab.querySelector('input[type="tel"]').value =
@@ -127,7 +128,7 @@ class Profile {
       const petInfo = JSON.parse(this.userData.pet_info);
       const petTab = document.getElementById("petTab");
 
-      petTab.querySelector('input[type="text"]').value = petInfo.name || "";
+      petTab.querySelector('input[type="text"]').value = petInfo.pet_name || "";
       petTab.querySelector('input[type="number"]').value = petInfo.age || "";
       petTab.querySelectorAll('input[type="text"]')[1].value =
         petInfo.breed || "";
@@ -197,6 +198,7 @@ class Profile {
         case "profile":
           formData = {
             name: this.modal.querySelector('input[type="text"]').value,
+            email: this.modal.querySelector('input[type="email"]').value,
             phone: this.modal.querySelector('input[type="tel"]').value,
             address: this.modal.querySelector("textarea").value,
             bio: this.modal.querySelectorAll("textarea")[1].value,
@@ -213,8 +215,10 @@ class Profile {
 
         case "pet":
           formData = {
+            name: this.modal.querySelector('input[type="text"]').value,
+            email: this.modal.querySelector('input[type="email"]').value,
             pet_info: JSON.stringify({
-              name: this.modal.querySelector('#petTab input[type="text"]')
+              pet_name: this.modal.querySelector('#petTab input[type="text"]')
                 .value,
               age: this.modal.querySelector('#petTab input[type="number"]')
                 .value,
@@ -240,18 +244,20 @@ class Profile {
           break;
       }
 
-      const response = await fetch("/api/update-profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "http://localhost/CB011999/public/api.php/update-user-profile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to save changes");
-
       this.showNotification("Changes saved successfully!");
-      // Refresh user data after save
+
       await this.fetchUserData();
       this.populateUserData();
     } catch (error) {

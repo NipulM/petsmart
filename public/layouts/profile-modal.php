@@ -59,7 +59,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700">Preferences</label>
           <div class="mt-2 space-y-2">
-            <label class="inline-flex items-center">
+            <label class="inline-flex items-center mr-10">
               <input type="checkbox" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
               <span class="ml-2">Email notifications</span>
             </label>

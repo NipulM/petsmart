@@ -7,6 +7,57 @@ class UserController {
         $this->userModel = new User();
     }
 
+    public function updateUserProfile($data) {
+        try {
+            $validation = $this->validateUserFormData($data);
+            if (!$validation['isValid']) {
+                http_response_code(400);
+                return [
+                    "status" => "error",
+                    "message" => "Validation failed",
+                    "errors" => $validation['errors']
+                ];
+            }
+    
+            $result = $this->userModel->updateUserProfile($data);
+            http_response_code(200);
+            return [
+                "status" => "success",
+                "message" => "Profile updated successfully"
+            ];
+        } catch (\Exception $e) {
+            if ($e->getMessage() === "User with this email already exists") {
+                http_response_code(409);
+            } else {
+                http_response_code(500); 
+            }
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function validateUserFormData($data) {
+        $errors = [];
+        $isValid = true;
+
+        if (!isset($data['name']) || empty($data['name'])) {
+            $errors['name'] = "name is required";
+            $isValid = false;
+        }
+
+        if (!isset($data['email']) || empty($data['email'])) {
+            $errors['email'] = "Email is required";
+            $isValid = false;
+        }
+
+        return [
+            "isValid" => $isValid,
+            "errors" => $errors
+        ];
+    }
+
     public function getUserProfile() {
         try {
             $profile = $this->userModel->getUserProfile();

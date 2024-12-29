@@ -9,6 +9,76 @@ class User {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    public function updateUserProfile($data) {
+        $profile = $this->getUserProfile();
+    
+        if (!$profile) {
+            http_response_code(401);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Not authenticated"
+            ]);
+            exit;
+        }
+    
+        $updateFields = [];
+        $types = "";
+        $values = [];
+    
+        // Map of field names to their corresponding SQL types
+        $fieldTypes = [
+            'name' => 's',
+            'email' => 's',
+            'bio' => 's',
+            'preferences' => 's',
+            'address' => 's',
+            'phone' => 's',
+            'pet_info' => 's'
+        ];
+    
+        foreach ($fieldTypes as $field => $type) {
+            if (isset($data[$field]) && $data[$field] !== null) {
+                if (in_array($field, ['preferences', 'pet_info']) && is_array($data[$field])) {
+                    $data[$field] = json_encode($data[$field]);
+                }
+                
+                $updateFields[] = "{$field} = ?";
+                $types .= $type;
+                $values[] = $data[$field];
+            }
+        }
+    
+        if (empty($updateFields)) {
+            return [
+                "status" => "success",
+                "message" => "No fields to update"
+            ];
+        }
+    
+        $types .= "i";
+        $values[] = $profile['user_id'];
+    
+        $sql = "UPDATE {$this->table} SET " . implode(", ", $updateFields) . " WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+    
+        if ($stmt) {
+            $stmt->bind_param($types, ...$values);
+            $result = $stmt->execute();
+    
+            if ($result) {
+                return [
+                    "status" => "success",
+                    "message" => "Profile updated successfully"
+                ];
+            }
+        }
+    
+        return [
+            "status" => "error",
+            "message" => "Failed to update profile"
+        ];
+    }
+
     public function login($data) {
         if (empty($data['email']) || empty($data['password'])) {
             throw new \Exception("All fields are required");

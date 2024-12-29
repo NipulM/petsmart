@@ -22,6 +22,11 @@ class Api {
         $requestURL = trim(str_replace($scriptName, '', $requestPath), '/');
 
         switch ($requestURL) {
+            case 'update-user-profile':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->userController->updateUserProfile($data));
+                break;
+
             case 'user-profile':
                 echo json_encode($this->userController->getUserProfile());
                 break;
