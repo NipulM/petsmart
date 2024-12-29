@@ -4,13 +4,14 @@ class Api {
     private $categoryController;
     private $blogController;
     private $userController;
-    private $sessionTable = 'sessions';
+    private $orderController;
 
     public function __construct() {
         $this->productController = new ProductController();
         $this->categoryController = new CategoryController();
         $this->blogController = new BlogController();
         $this->userController = new UserController();
+        $this->orderController = new OrderController();
     }
 
     public function handleRequest() {
@@ -22,6 +23,11 @@ class Api {
         $requestURL = trim(str_replace($scriptName, '', $requestPath), '/');
 
         switch ($requestURL) {
+            case 'place-order':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->orderController->placeOrder($data));
+                break;
+
             case 'update-user-profile':
                 $data = json_decode(file_get_contents('php://input'), true);
                 echo json_encode($this->userController->updateUserProfile($data));

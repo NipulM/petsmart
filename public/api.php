@@ -14,6 +14,9 @@ require_once '../src/controllers/BlogController.php';
 require_once '../src/models/User.php';
 require_once '../src/controllers/UserController.php';
 
+require_once '../src/models/Order.php';
+require_once '../src/controllers/OrderController.php';
+
 require_once '../src/routes/api.php';
 
 $api = new Api();

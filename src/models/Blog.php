@@ -2,7 +2,7 @@
 
 class Blog {
     private $db;
-    private $table = 'blog';
+    private $table = 'blogs';
 
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
