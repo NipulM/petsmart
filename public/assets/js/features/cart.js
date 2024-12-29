@@ -1,7 +1,7 @@
 class Cart {
   constructor() {
     this.modal = document.getElementById("cartModal");
-    this.cartIcon = document.getElementById("cart-icon");
+    this.cartIcon = document.getElementById("cartIcon");
     this.closeBtn = document.getElementById("closeCartModal");
     this.itemsContainer = document.getElementById("cartItems");
     this.emptyMessage = document.getElementById("emptyCartMessage");

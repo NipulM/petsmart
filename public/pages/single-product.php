@@ -162,6 +162,7 @@ try {
     <script defer src="../assets/js/auth/login.js"></script>
     <script defer src="../assets/js/auth/register.js"></script>
     <script defer src="../assets/js/features/cart.js"></script>
+    <script defer src="../assets/js/features/profile.js"></script>
 
     <style>
     input[type="number"]::-webkit-inner-spin-button,
