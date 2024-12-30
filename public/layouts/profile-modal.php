@@ -121,31 +121,6 @@
 
     <!-- Orders Tab Content -->
     <div id="ordersTab" class="tab-content py-4 hidden space-y-3">
-      <!-- <div class="space-y-4">
-        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div class="p-4">
-            <div class="flex justify-between items-center mb-2">
-              <div>
-                <span class="text-sm text-gray-500">Order ID:</span>
-                <span class="ml-2 font-medium">#ORD-2024-001</span>
-              </div>
-              <span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                Delivered
-              </span>
-            </div>
-            <div class="flex justify-between items-center">
-              <div>
-                <span class="text-sm text-gray-500">Total Price:</span>
-                <span class="ml-2 font-medium">$149.99</span>
-              </div>
-              <div>
-                <span class="text-sm text-gray-500">Pet Service:</span>
-                <span class="ml-2 font-medium">Grooming + Health Check</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <!-- Save Button -->
