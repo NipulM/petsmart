@@ -10,6 +10,39 @@ class Order {
         $this->userModel = new User();
     }
 
+    public function getAll() {
+        $sql = "SELECT * FROM {$this->table}";
+        $result = $this->db->query($sql);
+
+        $orders = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $orders[] = $row;
+            }
+        }
+        return $orders;
+    }
+
+    public function updateOrderStatus($data) {
+        $sql = "UPDATE {$this->table} SET status = ? WHERE order_id = ?";
+        $stmt = $this->db->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param("si", $data['status'], $data['order_id']);
+            if ($stmt->execute()) {
+                return [
+                    "status" => "success",
+                    "message" => "Order status updated successfully"
+                ];
+            }
+        }
+
+        return [
+            "status" => "error",
+            "message" => "Failed to update order status: " . $this->db->error
+        ];
+    }
+
     public function getUserOrders() {
         $profile = $this->userModel->getUserProfile();
         if (!$profile) {

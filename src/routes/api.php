@@ -23,6 +23,25 @@ class Api {
         $requestURL = trim(str_replace($scriptName, '', $requestPath), '/');
 
         switch ($requestURL) {
+            case 'update-order-status':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->orderController->updateOrderStatus($data));
+                break;
+
+            case 'get-blog-by-id':
+                if (isset($_GET['id'])) {
+                    echo json_encode($this->blogController->getBlogById(intval($_GET['id'])));
+                }
+                break;
+
+            case 'get-all-orders':
+                echo json_encode($this->orderController->getAll());
+                break;
+
+            case 'get-admin-dashboard-stats':
+                echo json_encode($this->userController->getAdminDashboardStats());
+                break;
+
             case 'get-user-orders':
                 echo json_encode($this->orderController->getUserOrders());
                 break;
@@ -61,9 +80,19 @@ class Api {
                 }
                 break;
 
-            case 'add-product':
+            case 'save-product':
                 $data = json_decode(file_get_contents('php://input'), true);
-                echo json_encode($this->productController->createProduct($data));
+                echo json_encode($this->productController->saveProduct($data));
+                break;
+
+            case 'save-blog':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->blogController->saveBlog($data));
+                break;
+
+            case 'add-category':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->categoryController->createNewCategory($data));
                 break;
 
             case 'update-product':
@@ -92,7 +121,7 @@ class Api {
                 if (isset($_GET['id'])) {
                     echo json_encode($this->categoryController->getCategoryById(intval($_GET['id'])));
                 }
-                break;
+                break;  
 
             case 'get-all-blogs':
                 echo json_encode($this->blogController->getAllBlogs());

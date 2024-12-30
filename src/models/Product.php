@@ -36,26 +36,69 @@ class Product {
         return null;
     }
 
-    public function create($data) {
-        $sql = "INSERT INTO {$this->table} (name, description, category, price, stock_quantity, is_seasonal) 
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
+    public function save($data) {
+        if (isset($data['product_id']) && !empty($data['product_id'])) {
+            $sql = "UPDATE {$this->table} 
+                    SET name = ?, 
+                        description = ?, 
+                        category_id = ?, 
+                        price = ?, 
+                        stock_quantity = ?, 
+                        is_seasonal = ?, 
+                        is_new = ?, 
+                        image_url = ?, 
+                        short_description = ? 
+                    WHERE product_id = ?";
+                    
+            $stmt = $this->db->prepare($sql);
+            
+            if ($stmt) {
+                $stmt->bind_param(
+                    "sssdissssi",
+                    $data['name'],
+                    $data['description'],
+                    $data['category_id'],
+                    $data['price'],
+                    $data['stock_quantity'],
+                    $data['is_seasonal'],
+                    $data['is_new'],
+                    $data['image_url'],
+                    $data['short_description'],
+                    $data['product_id']
+                );
+                return $stmt->execute();
+            }
+        } 
+        else {
+            return $this->create($data);
+        }
+        
+        throw new \Exception("Error preparing statement");
+    }
 
+    public function create($data) {
+        $sql = "INSERT INTO {$this->table} (name, description, category_id, price, stock_quantity, is_seasonal, is_new, image_url, short_description) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+    
         if ($stmt) {
             $stmt->bind_param(
-                "sssdis",
+                "sssdissss",
                 $data['name'],
                 $data['description'],
-                $data['category'],
+                $data['category_id'],
                 $data['price'],
                 $data['stock_quantity'],
-                $data['is_seasonal']
+                $data['is_seasonal'],
+                $data['is_new'],
+                $data['image_url'],
+                $data['short_description'],
             );
             return $stmt->execute();
         }
         throw new \Exception("Error preparing statement");
     }
-
+    
     public function update($id, $data) {
         $sql = "UPDATE {$this->table} SET name = ?, price = ?, description = ? WHERE product_id = ?";
         $stmt = $this->db->prepare($sql);

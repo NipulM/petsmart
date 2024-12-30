@@ -42,7 +42,7 @@ class ProductController {
         }
     }
 
-    public function createProduct($data) {
+    public function saveProduct($data) {
         try {
             $validation = $this->validateProductData($data);
             if (!$validation['isValid']) {
@@ -53,7 +53,7 @@ class ProductController {
                 ];
             }
 
-            $result = $this->productModel->create($data);
+            $result = $this->productModel->save($data);
             return [
                 "status" => "success",
                 "message" => "Product added successfully"
@@ -119,10 +119,13 @@ class ProductController {
         $requiredFields = [
             'name' => 'string',
             'description' => 'string',
-            'category' => 'string',
+            'short_description' => 'string',
+            'category_id' => 'int',
             'price' => 'float',
             'stock_quantity' => 'int',
-            'is_seasonal' => 'bool'
+            'is_seasonal' => 'bool',
+            'is_new' => 'bool',
+            'image_url' => 'string',
         ];
 
         $errors = [];

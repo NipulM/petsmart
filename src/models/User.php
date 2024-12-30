@@ -9,6 +9,132 @@ class User {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    public function getAdminDashboardStats() {
+        // $profile = $this->getUserProfile();
+    
+        // if (!$profile && $profile['role'] !== 'admin') {
+        //     http_response_code(401);
+        //     echo json_encode([
+        //         "status" => "error",
+        //         "message" => "Not authenticated"
+        //     ]);
+        //     exit;
+        // }
+
+
+
+        $stats = [
+            'total_users' => 0,
+            'total_orders' => 0,
+            'total_revenue' => 0,
+            'pending_orders' => 0,
+            'total_products' => 0,
+            'latest_orders' => []
+        ];
+        $chartData = [];
+        
+        // Fetch total users
+        $sql_users = "SELECT COUNT(*) as total_users FROM {$this->table}";
+        $result_users = $this->db->query($sql_users);
+        
+        if ($result_users) {
+            $stats['total_users'] = $result_users->fetch_assoc()['total_users'];
+        }
+        
+        // Fetch total orders
+        $sql_orders = "SELECT COUNT(*) as total_orders FROM orders";
+        $result_orders = $this->db->query($sql_orders);
+        
+        if ($result_orders) {
+            $stats['total_orders'] = $result_orders->fetch_assoc()['total_orders'];
+        }
+        
+        // Fetch total revenue
+        $sql_revenue = "SELECT SUM(total_amount) as total_revenue FROM orders WHERE status = 'completed'";
+        $result_revenue = $this->db->query($sql_revenue);
+        
+        if ($result_revenue) {
+            $stats['total_revenue'] = $result_revenue->fetch_assoc()['total_revenue'] ?? 0;
+        }
+        
+        // Fetch pending orders
+        $sql_pending_orders = "SELECT COUNT(*) as pending_orders FROM orders WHERE status = 'pending'";
+        $result_pending_orders = $this->db->query($sql_pending_orders);
+        
+        if ($result_pending_orders) {
+            $stats['pending_orders'] = $result_pending_orders->fetch_assoc()['pending_orders'];
+        }
+        
+        $sql_products = "SELECT COUNT(*) as total_products FROM products";
+        $result_products = $this->db->query($sql_products);
+        
+        if ($result_products) {
+            $stats['total_products'] = $result_products->fetch_assoc()['total_products'];
+        }
+    
+        $sql_products_by_category = "
+            SELECT c.name as category_name, COUNT(p.product_id) as total_products 
+            FROM products p
+            JOIN category c ON p.category_id = c.category_id 
+            GROUP BY c.category_id, c.name
+        ";
+        $result_products_by_category = $this->db->query($sql_products_by_category);
+        
+        $chartData['products_by_category'] = [];
+        if ($result_products_by_category) {
+            while ($row = $result_products_by_category->fetch_assoc()) {
+                $chartData['products_by_category'][] = [
+                    'category' => $row['category_name'],
+                    'total_products' => $row['total_products']
+                ];
+            }
+        }
+
+        $sql_latest_orders = "
+            SELECT order_id, name, status, total_amount 
+            FROM orders 
+            ORDER BY created_at DESC 
+            LIMIT 5
+        ";
+
+        $result_latest_orders = $this->db->query($sql_latest_orders);
+
+        if ($result_latest_orders) {
+            while ($row = $result_latest_orders->fetch_assoc()) {
+                $stats['latest_orders'][] = [
+                    'order_id' => $row['order_id'],
+                    'customer_name' => $row['name'],
+                    'status' => $row['status'],
+                    'total_amount' => $row['total_amount']
+                ];
+            }
+        }
+    
+        $sql_orders_by_status = "
+            SELECT 
+                status,
+                COUNT(*) as total_orders 
+            FROM orders 
+            GROUP BY status
+        ";
+        $result_orders_by_status = $this->db->query($sql_orders_by_status);
+        
+        $chartData['orders_by_status'] = [];
+        if ($result_orders_by_status) {
+            while ($row = $result_orders_by_status->fetch_assoc()) {
+                $chartData['orders_by_status'][] = [
+                    'status' => $row['status'],
+                    'total_orders' => $row['total_orders']
+                ];
+            }
+        }
+    
+        return [
+            'stats' => $stats,
+            'chartData' => $chartData
+        ];
+    }
+
     public function updateUserProfile($data) {
         $profile = $this->getUserProfile();
     

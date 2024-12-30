@@ -7,6 +7,24 @@ class UserController {
         $this->userModel = new User();
     }
 
+    public function getAdminDashboardStats() {
+        try {
+            $stats = $this->userModel->getAdminDashboardStats();
+            http_response_code(200);
+            return [
+                "status" => "success",
+                "message" => "Stats retrieved successfully",
+                "data" => $stats
+            ];
+        } catch (\Exception $e) {
+            http_response_code(500);
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function updateUserProfile($data) {
         try {
             $validation = $this->validateUserFormData($data);

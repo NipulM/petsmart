@@ -36,6 +36,18 @@ class Category {
         }
         return null;
     }
+
+    public function create($data) {
+        $sql = "INSERT INTO {$this->table} (name, description) VALUES (?, ?)";
+        $stmt = $this->db->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param("ss", $data['name'],  $data['description']);
+            $stmt->execute();
+            return $this->getById($stmt->insert_id);
+        }
+        return null;
+    }
 }
 
 ?>
