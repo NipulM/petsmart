@@ -7,6 +7,61 @@ class UserController {
         $this->userModel = new User();
     }
 
+    public function adminLogin($data) {
+        try {
+            if (empty($data['email']) || empty($data['password'])) {
+                http_response_code(400);
+                return [
+                    "status" => "error",
+                    "message" => "All fields are required"
+                ];
+            }
+    
+            $result = $this->userModel->adminLogin($data);
+            http_response_code(200);
+            return [
+                "status" => "success",
+                "message" => "Login successful",
+                "data" => $result
+            ];
+        } catch (\Exception $e) {
+            if ($e->getMessage() === "Invalid email or password") {
+                http_response_code(401);
+            } else {
+                http_response_code(500); 
+            }
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function validateToken($data) {
+        try {
+            $result = $this->userModel->validateToken($data);
+            if ($result) {
+                http_response_code(200);
+                return [
+                    "status" => "success",
+                    "message" => "Token is valid"
+                ];
+            } else {
+                http_response_code(401);
+                return [
+                    "status" => "error",
+                    "message" => "Token is invalid"
+                ];
+            }
+        } catch (\Exception $e) {
+            http_response_code(500);
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function getAdminDashboardStats() {
         try {
             $stats = $this->userModel->getAdminDashboardStats();

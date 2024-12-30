@@ -18,7 +18,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body id="admin-dashboard" class="bg-gray-100 hidden">
     <div class="flex">
         <!-- Sidebar -->
         <div class="w-64 h-screen bg-white shadow-lg fixed">
@@ -114,5 +114,6 @@
     </div>
 
     <script defer src="./js/admin.js"></script>
+    <script defer src="./js/login.js"></script>
 </body>
 </html>

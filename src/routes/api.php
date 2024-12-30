@@ -60,6 +60,16 @@ class Api {
                 echo json_encode($this->userController->getUserProfile());
                 break;
 
+            case 'admin-login':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->userController->adminLogin($data));
+                break;
+
+            case 'validate-token':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->userController->validateToken($data));
+                break;
+
             case 'login':
                 $data = json_decode(file_get_contents('php://input'), true);
                 echo json_encode($this->userController->loginUser($data));

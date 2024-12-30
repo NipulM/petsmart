@@ -1,3 +1,39 @@
+function checkAuth() {
+  const adminSession = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("adminSession="))
+    ?.split("=")[1];
+
+  if (!adminSession) {
+    window.location.href = "../admin/login.php";
+    return;
+  }
+
+  fetch("http://localhost/CB011999/public/api.php/validate-token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: adminSession,
+      role: "admin",
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "error") {
+        window.location.href = "../admin/login.php";
+      }
+    })
+    .catch(() => {
+      window.location.href = "../admin/login.php";
+    });
+
+  document.getElementById("admin-dashboard").classList.remove("hidden");
+}
+
+checkAuth();
+
 const productsContainer = document.getElementById("products-container");
 const ordersContainer = document.getElementById("orders-container");
 const categoriesContainer = document.getElementById("add-new-category");

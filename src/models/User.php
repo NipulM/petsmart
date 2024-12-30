@@ -9,6 +9,123 @@ class User {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    public function adminLogin($data) {
+        if (empty($data['email']) || empty($data['password'])) {
+            throw new \Exception("All fields are required");
+        }
+    
+        $sql = "SELECT * FROM {$this->table} WHERE email = ?";
+        $stmt = $this->db->prepare($sql);
+    
+        if ($stmt) {
+            $stmt->bind_param("s", $data['email']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
+            if ($result->num_rows > 0) {
+                $user = $result->fetch_assoc();
+    
+                if (!$user || !password_verify($data['password'], $user['password_hash'])) {
+                    throw new \Exception("Invalid email or password");
+                }
+    
+                if ($user['role'] !== 'admin') {
+                    throw new \Exception("Unauthorized access");
+                }
+    
+                $issuedAt = time();
+                $expirationTime = $issuedAt + 3600 * 10; 
+                $payload = [
+                    'iat' => $issuedAt,
+                    'exp' => $expirationTime,
+                    'user_id' => $user['user_id']
+                ];
+    
+                $token = bin2hex(random_bytes(32));
+    
+                // Insert session into database
+                $sql_sessions = "INSERT INTO {$this->sessionsTable} (user_id, token) VALUES (?, ?)";
+                $stmt_sessions = $this->db->prepare($sql_sessions);
+    
+                if ($stmt_sessions) {
+                    $stmt_sessions->bind_param(
+                        "is",
+                        $user['user_id'],
+                        $token,
+                    );
+    
+                    $stmt_sessions->execute();
+                    return [
+                        'status' => 'success',
+                        'message' => 'Login successful',
+                        'token' => $token,
+                    ];
+                } else {
+                    throw new \Exception("Failed to create session");
+                }
+            } else {
+                throw new \Exception("Invalid email or password");
+            }
+        } else {
+            throw new \Exception("Database error");
+        }
+    }
+
+    public function validateToken($data) {
+        $sessionToken = $data['token'] ?? null;
+    
+        if (!$sessionToken) {
+            http_response_code(401);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Not authenticated"
+            ]);
+            exit;
+        }
+    
+        $userId = $this->getUserIdBySessionToken($sessionToken);
+    
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Invalid or expired session"
+            ]);
+            exit;
+        }
+
+        if ($data['role'] && $data['role'] !== 'admin') {
+            $profile = $this->getUserProfileByUserId($userId);
+    
+            if (!$profile || $profile['role'] !== $role) {
+                http_response_code(401);
+                echo json_encode([
+                    "status" => "error",
+                    "message" => "Unauthorized access"
+                ]);
+                exit;
+            }
+        }
+
+        if ($data['role'] && $data['role'] === 'admin') {
+            $profile = $this->getUserProfileByUserId($userId);
+    
+            if (!$profile || $profile['role'] !== 'admin') {
+                http_response_code(401);
+                echo json_encode([
+                    "status" => "error",
+                    "message" => "Unauthorized access"
+                ]);
+                exit;
+            }
+        }
+    
+        return [
+            "status" => "success",
+            "message" => "Token is valid"
+        ];
+    }
+
     public function getAdminDashboardStats() {
         // $profile = $this->getUserProfile();
     
