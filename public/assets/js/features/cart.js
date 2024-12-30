@@ -138,7 +138,7 @@ class Cart {
       this.itemsContainer.innerHTML = this.items
         .map(
           (item) => `
-          <div class="flex items-center justify-between p-4 border-b">
+          <div id="${item.id}#${item.name}" class="flex items-center justify-between p-4 border-b">
             <div class="flex items-center space-x-4">
               <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
               <div>
@@ -202,7 +202,29 @@ class Cart {
       return;
     }
 
-    await this.placeOrder(formData);
+    for (let item of formData.items) {
+      const response = await fetch(
+        `http://localhost/CB011999/public/api.php/get-product-by-id?id=${item.id}`
+      );
+
+      if (!response.ok) {
+        this.showNotification("Failed to fetch product details", "error");
+        return;
+      }
+      const productDetails = await response.json();
+      const stockQuantity = productDetails.data.stock_quantity;
+      if (item.quantity > stockQuantity) {
+        const itemCard = document.getElementById(`${item.id}#${item.name}`);
+        itemCard.classList.add("bg-slate-300", "rounded-2xl");
+        this.showNotification(
+          "Sorry, no more stock available for this item " + item.name,
+          "error"
+        );
+        return;
+      }
+    }
+
+    // await this.placeOrder(formData);
 
     this.items = [];
     this.saveCart();

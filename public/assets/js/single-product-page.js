@@ -27,6 +27,11 @@ function addToCart(productDetails) {
 
   const [id, price, name, image, stockQuantity, category] = productDetails;
 
+  if (itemQuantity > stockQuantity) {
+    showNotification("Sorry, no more stock available for this item", "error");
+    return;
+  }
+
   const product = {
     id: parseInt(id),
     price: parseFloat(price),
