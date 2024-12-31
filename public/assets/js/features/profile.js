@@ -4,6 +4,7 @@ class Profile {
     this.modal = document.getElementById("profileModal");
     this.profileIcon = document.getElementById("profileIcon");
     this.closeBtn = document.getElementById("closeProfileModal");
+    this.logoutBtn = document.getElementById("logoutButton");
 
     // Tab elements
     this.tabs = document.querySelectorAll(".tab-btn");
@@ -27,6 +28,8 @@ class Profile {
     });
     this.closeBtn.addEventListener("click", () => this.closeModal());
     this.modal.addEventListener("click", (e) => this.handleOutsideClick(e));
+
+    this.logoutBtn.addEventListener("click", () => this.handleLogout());
 
     // Tab switching
     this.tabs.forEach((tab) => {
@@ -86,6 +89,24 @@ class Profile {
       this.userOrders = userOrders;
     } catch (error) {
       console.error("Error fetching user orders:", error);
+    }
+  }
+
+  handleLogout() {
+    try {
+      localStorage.removeItem("cartItems");
+      localStorage.setItem("isLoggedIn", "false");
+
+      document.cookie =
+        "session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+      this.closeModal();
+      this.showNotification("Logged out successfully!");
+
+      window.location.href = "../pages/index.php";
+    } catch (error) {
+      console.error("Error during logout:", error);
+      this.showNotification("Failed to logout properly", "error");
     }
   }
 

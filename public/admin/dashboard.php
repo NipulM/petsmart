@@ -21,17 +21,25 @@
 <body id="admin-dashboard" class="bg-gray-100 hidden">
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-64 h-screen bg-white shadow-lg fixed">
+        <div class="w-64 h-screen bg-white shadow-lg fixed flex flex-col">
             <div class="p-4">
                 <h1 class="text-xl font-bold">PetSmart Admin</h1>
             </div>
-            <nav class="mt-4">
+            <nav class="mt-4 flex-grow">
                 <a href="#dashboard" id="dashboard-link" class="block px-4 py-2 bg-gray-100">Dashboard</a>
                 <a href="#products" id="products-link" class="block px-4 py-2 hover:bg-gray-100">Products</a>
                 <a href="#orders" id="orders-link" class="block px-4 py-2 hover:bg-gray-100">Orders</a>
                 <a href="#categories" id="categories-link" class="block px-4 py-2 hover:bg-gray-100">Categories</a>
                 <a href="#blogs" id="blogs-link" class="block px-4 py-2 hover:bg-gray-100">Blogs</a>
             </nav>
+            <div class="p-4 border-t">
+                <a href="#" id="logout-btn" class="block px-4 py-2 text-red-600 hover:bg-red-50 rounded flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
         </div>
 
         <!-- Main Content -->

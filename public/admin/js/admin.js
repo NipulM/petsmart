@@ -38,6 +38,14 @@ const productsContainer = document.getElementById("products-container");
 const ordersContainer = document.getElementById("orders-container");
 const categoriesContainer = document.getElementById("add-new-category");
 const blogContainer = document.getElementById("blog-container");
+const logoutBtn = document.getElementById("logout-btn");
+
+logoutBtn.addEventListener("click", () => {
+  document.cookie =
+    "adminSession=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+  window.location.href = "../admin/login.php";
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   loadDashboardStats();
