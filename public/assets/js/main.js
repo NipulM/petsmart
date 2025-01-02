@@ -1,5 +1,6 @@
 // API URL
-const fetchAllProducts = "http://localhost/cb011999/routes.php/";
+const fetchAllProducts =
+  "http://localhost/CB011999/public/api.php/get-new-products";
 
 async function fetchProducts() {
   try {
