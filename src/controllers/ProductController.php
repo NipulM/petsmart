@@ -6,6 +6,21 @@ class ProductController {
         $this->productModel = new Product();
     }
 
+    public function getNewProducts() {
+        try {
+            $products = $this->productModel->getNewProducts();
+            return [
+                "status" => "success",
+                "data" => $products
+            ];
+        } catch (\Exception $e) {
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function getAllProducts() {
         try {
             $products = $this->productModel->getAll();

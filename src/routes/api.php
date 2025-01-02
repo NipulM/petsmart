@@ -23,6 +23,10 @@ class Api {
         $requestURL = trim(str_replace($scriptName, '', $requestPath), '/');
 
         switch ($requestURL) {
+            case 'get-new-products':
+                echo json_encode($this->productController->getNewProducts());
+                break;
+
             case 'update-order-status':
                 $data = json_decode(file_get_contents('php://input'), true);
                 echo json_encode($this->orderController->updateOrderStatus($data));

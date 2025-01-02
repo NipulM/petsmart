@@ -7,6 +7,19 @@ class Product {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    public function getNewProducts() {
+        $sql = "SELECT * FROM {$this->table} WHERE is_new = 1";
+        $result = $this->db->query($sql);
+
+        $products = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $products[] = $row;
+            }
+        }
+        return $products;
+    }
+
     public function getAll() {
         $sql = "SELECT * FROM {$this->table}";
         $result = $this->db->query($sql);
