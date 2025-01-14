@@ -550,40 +550,122 @@ async function loadOrders() {
     ordersContainer.innerHTML = orders
       .map(
         (order) => `
-            <div class="bg-white p-4 rounded-lg shadow mb-4">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="font-semibold">Order #${order.order_id}</h3>
-                        <p class="text-gray-600">${order.name}</p>
-                        <p class="text-sm text-gray-500">${order.created_at}</p>
-                    </div>
-                    <div>
-                        <select onchange="updateOrderStatus(${
-                          order.order_id
-                        }, this.value)" 
-                                class="border p-2 rounded">
-                            <option value="pending" ${
-                              order.status === "pending" ? "selected" : ""
-                            }>Pending</option>
-                            <option value="processing" ${
-                              order.status === "processing" ? "selected" : ""
-                            }>Processing</option>
-                            <option value="completed" ${
-                              order.status === "completed" ? "selected" : ""
-                            }>Completed</option>
-                            <option value="cancelled" ${
-                              order.status === "cancelled" ? "selected" : ""
-                            }>Cancelled</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        `
+          <div class="bg-white p-4 rounded-lg mb-4 shadow-sm hover:shadow-md cursor-pointer transition-shadow" 
+               onclick='showOrderDetails(${JSON.stringify(order).replace(
+                 /'/g,
+                 "&apos;"
+               )})'>
+              <div class="flex justify-between items-center">
+                  <div>
+                      <h3 class="font-semibold">Order #${order.order_id}</h3>
+                      <p class="text-gray-600">${order.name}</p>
+                      <p class="text-sm text-gray-500">${order.created_at}</p>
+                  </div>
+                  <div onclick="event.stopPropagation()">
+                      <select onchange="updateOrderStatus(${
+                        order.order_id
+                      }, this.value)" 
+                              class="border p-2 rounded">
+                          <option value="pending" ${
+                            order.status === "pending" ? "selected" : ""
+                          }>Pending</option>
+                          <option value="processing" ${
+                            order.status === "processing" ? "selected" : ""
+                          }>Processing</option>
+                          <option value="completed" ${
+                            order.status === "completed" ? "selected" : ""
+                          }>Completed</option>
+                          <option value="cancelled" ${
+                            order.status === "cancelled" ? "selected" : ""
+                          }>Cancelled</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+      `
       )
       .join("");
   } catch (error) {
     console.error("Error loading orders:", error);
   }
+}
+
+function showOrderDetails(order) {
+  if (typeof order.order_items === "string") {
+    order.order_items = JSON.parse(order.order_items);
+  }
+
+  console.log(order.order_items);
+
+  const modalHTML = `
+    <div id="orderDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg w-full max-w-4xl max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Order Details #${order.order_id}</h2>
+          <button onclick="closeModal('orderDetailsModal')" class="text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="border-b pb-4">
+            <h4 class="font-medium mb-2">Customer Information</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span class="text-gray-500">Name:</span>
+                <span class="ml-2">${order.name}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Email:</span>
+                <span class="ml-2">${order.email}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Phone:</span>
+                <span class="ml-2">${order.phone_number}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Address:</span>
+                <span class="ml-2">${order.address}</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-medium mb-2">Order Items</h4>
+            <div class="space-y-3">
+              ${order.order_items
+                .map(
+                  (item) => `
+                <div class="flex justify-between items-center border-b pb-3">
+                  <div class="flex items-center gap-4">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                    <div>
+                      <p class="font-medium">${item.name}</p>
+                      <p class="text-sm text-gray-500">Quantity: ${item.quantity}</p>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-medium">$${item.price}</p>
+                  </div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+
+          <div class="text-sm text-gray-500 mt-2">
+            <span>Order Date:</span>
+            <span class="ml-2">${order.created_at}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
 
 async function updateOrderStatus(orderId, status) {
