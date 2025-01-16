@@ -18,6 +18,8 @@ async function fetchProducts() {
   }
 }
 
+fetchProducts();
+
 function renderProducts(products) {
   const productGrid = document.getElementById("product-grid");
   productGrid.innerHTML = "";
@@ -41,10 +43,11 @@ function renderProducts(products) {
               product.price
             ).toFixed(2)}</span>
             <button 
-              onclick="window.location.href='../public/pages/single-product.php?id=${
+              onclick="event.stopPropagation(); addToCart([${
                 product.product_id
-              }'"
-              // onclick="event.stopPropagation(); addToCart(${product.id});" 
+              }, ${product.price}, '${product.name}', '${product.image_url}', ${
+      product.stock_quantity
+    }, '${product.category}'])"
               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
               Add to Cart
             </button>
@@ -61,4 +64,78 @@ function displayError(message) {
   productGrid.innerHTML = `<p class="text-center text-gray-600">${message}</p>`;
 }
 
-fetchProducts();
+function getCartItems() {
+  const items = localStorage.getItem("cartItems");
+  return items ? JSON.parse(items) : [];
+}
+
+function saveCartItems(items) {
+  localStorage.setItem("cartItems", JSON.stringify(items));
+}
+
+function addToCart(productDetails) {
+  const itemQuantity = 1;
+  if (!productDetails || !Array.isArray(productDetails)) {
+    console.error("Invalid product details");
+    return;
+  }
+
+  const [id, price, name, image, stockQuantity, category] = productDetails;
+  console.log("here is the product details");
+  console.log(id, price, name, image, stockQuantity, category);
+
+  if (itemQuantity > stockQuantity) {
+    showNotification("Sorry, no more stock available for this item", "error");
+    return;
+  }
+
+  const product = {
+    id: parseInt(id),
+    price: parseFloat(price),
+    name: name,
+    image: image,
+    stockQuantity: parseInt(stockQuantity),
+    category: category,
+  };
+
+  let cartItems = getCartItems();
+  const existingItem = cartItems.find((item) => item.id === product.id);
+
+  if (existingItem) {
+    if (existingItem.quantity < product.stockQuantity) {
+      existingItem.quantity += itemQuantity;
+      showNotification("Item quantity increased in cart");
+    } else {
+      showNotification("Sorry, no more stock available for this item", "error");
+      return;
+    }
+  } else {
+    cartItems.push({
+      ...product,
+      quantity: itemQuantity,
+    });
+    showNotification("Item added to cart");
+  }
+  saveCartItems(cartItems);
+
+  const cartCount = document.getElementById("cartCount");
+  if (cartCount) {
+    const totalItems = cartItems.length;
+    cartCount.textContent = totalItems;
+    cartCount.classList.remove("hidden");
+  }
+}
+
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-md shadow-lg ${
+    type === "success" ? "bg-green-500" : "bg-red-500"
+  } text-white`;
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}

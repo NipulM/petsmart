@@ -9,10 +9,10 @@
                     <div>
                         <h3 class="font-semibold mb-4">Quick Links</h3>
                         <ul class="space-y-2">
-                            <li><a href="#" class="hover:underline">Home</a></li>
-                            <li><a href="#" class="hover:underline">Search</a></li>
-                            <li><a href="#" class="hover:underline">Subscription Plans</a></li>
-                            <li><a href="#" class="hover:underline">About us / Blogs</a></li>
+                            <li><a href="../pages/index.php" class="hover:underline">Home</a></li>
+                            <li><a href="../pages/search.php" class="hover:underline">Search</a></li>
+                            <li><a href="../pages/subscription.php" class="hover:underline">Subscription Plans</a></li>
+                            <li><a href="../pages/about.php" class="hover:underline">About us / Blogs</a></li>
                         </ul>
                     </div>
 
