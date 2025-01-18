@@ -215,13 +215,19 @@ async function loadProducts(categoryId = null) {
                         <h3 class="font-semibold text-lg mb-2">${product.name}</h3>
                         <p class="text-gray-600 font-bold mb-1">$${product.price}</p>
                         <p class="text-sm text-gray-500 mb-3">Stock: ${product.stock_quantity}</p>
-                        <button onclick="openProductModal(${product.product_id})" 
-                                class="w-full bg-white border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-50 transition-colors duration-200 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                            </svg>
-                            Edit
-                        </button>
+                        <div class="flex space-x-2">
+                            <button onclick="openProductModal(${product.product_id})" 
+                                    class="flex-grow bg-white border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-50 transition-colors duration-200 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                </svg>
+                                Edit
+                            </button>
+                            <button onclick="deleteProduct(${product.product_id})" 
+                                    class="w-1/4 bg-white border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-50 transition-colors duration-200 flex items-center justify-center">
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 `
                   )
@@ -243,6 +249,25 @@ async function loadProducts(categoryId = null) {
     }
   } catch (error) {
     console.error("Error loading products:", error);
+  }
+}
+
+async function deleteProduct(productId) {
+  if (!confirm("Are you sure you want to delete this product?")) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost/CB011999/public/api.php/delete-product-by-id?id=${productId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      loadProducts();
+    }
+  } catch (error) {
+    console.error("Error deleting product:", error);
   }
 }
 

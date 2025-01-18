@@ -21,6 +21,21 @@ class ProductController {
         }
     }
 
+    public function deleteProductById($id) {
+        try {
+            $result = $this->productModel->delete($id);
+            return [
+                "status" => "success",
+                "message" => "Product deleted successfully"
+            ];
+        } catch (\Exception $e) {
+            return [
+                "status" => "error",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function getAllProducts() {
         try {
             $products = $this->productModel->getAll();

@@ -145,6 +145,12 @@ class Api {
 
             case 'get-subscription-plans':
                 echo json_encode($this->subscriptionController->getAllSubscriptions());
+                break;  
+                
+            case 'delete-product-by-id':
+                if (isset($_GET['id'])) {
+                    echo json_encode($this->productController->deleteProductById(intval($_GET['id'])));
+                }
                 break;    
             
             case 'get-latest-blog':

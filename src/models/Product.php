@@ -49,6 +49,17 @@ class Product {
         return null;
     }
 
+    public function delete($id) {
+        $sql = "DELETE FROM {$this->table} WHERE product_id = ?";
+        $stmt = $this->db->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param("i", $id);
+            return $stmt->execute();
+        }
+        throw new \Exception("Error preparing statement");
+    }
+
     public function save($data) {
         if (isset($data['product_id']) && !empty($data['product_id'])) {
             $sql = "UPDATE {$this->table} 
@@ -118,17 +129,6 @@ class Product {
 
         if ($stmt) {
             $stmt->bind_param("sdsi", $data['name'], $data['price'], $data['description'], $id);
-            return $stmt->execute();
-        }
-        throw new \Exception("Error preparing statement");
-    }
-
-    public function delete($id) {
-        $sql = "DELETE FROM {$this->table} WHERE product_id = ?";
-        $stmt = $this->db->prepare($sql);
-
-        if ($stmt) {
-            $stmt->bind_param("i", $id);
             return $stmt->execute();
         }
         throw new \Exception("Error preparing statement");
