@@ -17,6 +17,9 @@ require_once '../src/controllers/UserController.php';
 require_once '../src/models/Order.php';
 require_once '../src/controllers/OrderController.php';
 
+require_once '../src/models/Subscription.php';
+require_once '../src/controllers/SubscriptionController.php';
+
 require_once '../src/routes/api.php';
 
 $api = new Api();

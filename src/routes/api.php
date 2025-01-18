@@ -5,6 +5,7 @@ class Api {
     private $blogController;
     private $userController;
     private $orderController;
+    private $subscriptionController;
 
     public function __construct() {
         $this->productController = new ProductController();
@@ -12,6 +13,7 @@ class Api {
         $this->blogController = new BlogController();
         $this->userController = new UserController();
         $this->orderController = new OrderController();
+        $this->subscriptionController = new SubscriptionController();
     }
 
     public function handleRequest() {
@@ -140,6 +142,10 @@ class Api {
             case 'get-all-blogs':
                 echo json_encode($this->blogController->getAllBlogs());
                 break;
+
+            case 'get-subscription-plans':
+                echo json_encode($this->subscriptionController->getAllSubscriptions());
+                break;    
             
             case 'get-latest-blog':
                 echo json_encode($this->blogController->getLatestBlog());
