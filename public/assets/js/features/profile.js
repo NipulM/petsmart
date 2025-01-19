@@ -16,9 +16,13 @@ class Profile {
     // User data
     this.userData = null;
     this.userOrders = null;
+    this.userSubscriptionBoxes = null;
 
     this.orderDetailsModal = null;
     this.createOrderDetailsModal();
+
+    this.subscriptionDetailsModal = null;
+    this.createSubscriptionDetailsModal();
 
     this.init();
   }
@@ -103,6 +107,43 @@ class Profile {
     }
   }
 
+  createSubscriptionDetailsModal() {
+    if (!this.subscriptionDetailsModal) {
+      const modal = document.createElement("div");
+      modal.className =
+        "fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-[52]";
+      modal.id = "subscriptionDetailsModal";
+      modal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-xl mx-4 overflow-hidden">
+          <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="text-lg font-medium">Subscription Box Details</h3>
+            <button class="text-gray-400 hover:text-gray-500" id="closeSubscriptionBoxDetail">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="p-4" id="subscriptionDetailsContent"></div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      modal
+        .querySelector("#closeSubscriptionBoxDetail")
+        .addEventListener("click", () => {
+          this.closeSubscriptionBoxDetail();
+        });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          this.closeSubscriptionBoxDetail();
+        }
+      });
+
+      this.subscriptionDetailsModal = modal;
+    }
+  }
+
   async fetchUserData() {
     try {
       const response = await fetch(
@@ -132,6 +173,21 @@ class Profile {
     }
   }
 
+  async fetchUserSubscriptionBoxes() {
+    try {
+      const response = await fetch(
+        "http://localhost/CB011999/public/api.php/get-user-subscription-boxes"
+      );
+      if (!response.ok)
+        throw new Error("Failed to fetch user subscription boxes");
+
+      const userSubscriptionBoxes = await response.json();
+      this.userSubscriptionBoxes = userSubscriptionBoxes.data;
+    } catch (error) {
+      console.error("Error fetching user subscription boxes:", error);
+    }
+  }
+
   handleLogout() {
     try {
       localStorage.removeItem("cartItems");
@@ -154,6 +210,7 @@ class Profile {
     // Fetch user data before showing modal
     await this.fetchUserData();
     await this.fetchUserOrders();
+    await this.fetchUserSubscriptionBoxes();
     this.hideLoader();
 
     if (this.userData) {
@@ -235,6 +292,172 @@ class Profile {
         this.userData.created_at
       ).toLocaleDateString();
     }
+  }
+
+  populateSubscriptionBoxes() {
+    const subscriptionTab = document.getElementById("subscriptionBoxesTab");
+    subscriptionTab.innerHTML = "";
+
+    if (this.userSubscriptionBoxes) {
+      this.userSubscriptionBoxes.forEach((subscription) => {
+        // Calculate remaining days
+        const expiryDate = new Date(subscription.expiry_date);
+        const currentDate = new Date();
+        const daysRemaining = Math.ceil(
+          (expiryDate - currentDate) / (1000 * 60 * 60 * 24)
+        );
+
+        // Determine status color
+        const statusColors = {
+          active: "bg-green-100 text-green-800",
+          expired: "bg-red-100 text-red-800",
+          pending: "bg-yellow-100 text-yellow-800",
+        };
+
+        const statusColor =
+          statusColors[subscription.status] || statusColors.pending;
+
+        const subscriptionCard = `
+          <div class="space-y-4">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md cursor-pointer transition-shadow">
+              <div class="p-4">
+                <div class="flex justify-between items-center mb-2">
+                  <div>
+                    <span class="text-sm text-gray-500">Subscription ID:</span>
+                    <span class="ml-2 font-medium">#SUB-${
+                      subscription.subscription_id
+                    }</span>
+                  </div>
+                  <span class="px-3 py-1 rounded-full text-sm font-medium ${statusColor}">
+                    ${
+                      subscription.status.charAt(0).toUpperCase() +
+                      subscription.status.slice(1)
+                    }
+                  </span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <span class="text-sm text-gray-500">Start Date:</span>
+                    <span class="ml-2 font-medium">${
+                      subscription.start_date
+                    }</span>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">Expiry Date:</span>
+                    <span class="ml-2 font-medium">${
+                      subscription.expiry_date
+                    }</span>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">Monthly Amount:</span>
+                    <span class="ml-2 font-medium">$${
+                      subscription.total_amount
+                    }</span>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">Days Remaining:</span>
+                    <span class="ml-2 font-medium ${
+                      daysRemaining <= 7 ? "text-red-600" : ""
+                    }">${daysRemaining} days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+
+        const subscriptionElement = document.createElement("div");
+        subscriptionElement.innerHTML = subscriptionCard;
+        const subscriptionCardElement = subscriptionElement.firstElementChild;
+
+        subscriptionCardElement.addEventListener("click", () => {
+          console.log(subscription);
+          this.showSubscriptionDetails(subscription);
+        });
+
+        subscriptionTab.appendChild(subscriptionCardElement);
+      });
+    }
+  }
+
+  showSubscriptionDetails(subscription) {
+    const orderItems = subscription.order_items;
+    const content = document.getElementById("subscriptionDetailsContent");
+
+    // Calculate total items and next delivery date
+    const totalItems = orderItems.reduce((sum, item) => sum + item.quantity, 0);
+    const nextDeliveryDate = new Date(subscription.start_date);
+    nextDeliveryDate.setMonth(nextDeliveryDate.getMonth() + 1);
+
+    content.innerHTML = `
+      <div class="space-y-6">
+        <div class="border-b pb-4">
+          <h4 class="font-medium mb-4">Subscription Details</h4>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-500">Start Date:</span>
+              <span class="ml-2">${subscription.start_date}</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Expiry Date:</span>
+              <span class="ml-2">${subscription.expiry_date}</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Status:</span>
+              <span class="ml-2 capitalize">${subscription.status}</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Next Delivery:</span>
+              <span class="ml-2">${nextDeliveryDate.toLocaleDateString()}</span>
+            </div>
+          </div>
+        </div>
+  
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="font-medium">Subscription Items</h4>
+            <span class="text-sm text-gray-500">Total Items: ${totalItems}</span>
+          </div>
+          <div class="space-y-4">
+            ${orderItems
+              .map(
+                (item) => `
+              <div class="flex justify-between items-center border-b pb-4">
+                <div class="flex items-center gap-4">
+                  <img src="${item.image_url}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                  <div>
+                    <p class="font-medium">${item.name}</p>
+                    <p class="text-sm text-gray-500">${item.short_description}</p>
+                    <p class="text-sm text-gray-500">Quantity per delivery: ${item.quantity}</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="font-medium">$${item.price}</p>
+                  <p class="text-sm text-gray-500">per unit</p>
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        </div>
+  
+        <div class="border-t pt-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="font-medium">Monthly Total:</p>
+              <p class="text-sm text-gray-500">Billed monthly</p>
+            </div>
+            <span class="font-medium text-lg">$${
+              subscription.total_amount
+            }</span>
+          </div>
+        </div>
+        
+      </div>
+    `;
+
+    this.subscriptionDetailsModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
   }
 
   populateUserOrders() {
@@ -356,6 +579,11 @@ class Profile {
     document.body.style.overflow = "";
   }
 
+  closeSubscriptionBoxDetail() {
+    this.subscriptionDetailsModal.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+
   switchTab(selectedTab) {
     this.tabs.forEach((tab) => {
       tab.classList.remove("border-blue-500", "text-blue-600");
@@ -374,6 +602,13 @@ class Profile {
 
     if (selectedTab.dataset.tab === "orders") {
       this.populateUserOrders();
+      this.saveBtn.classList.add("hidden");
+    } else {
+      this.saveBtn.classList.remove("hidden");
+    }
+
+    if (selectedTab.dataset.tab === "subscriptionBoxes") {
+      this.populateSubscriptionBoxes();
       this.saveBtn.classList.add("hidden");
     } else {
       this.saveBtn.classList.remove("hidden");

@@ -224,7 +224,7 @@ class Cart {
       }
     }
 
-    // await this.placeOrder(formData);
+    await this.placeOrder(formData);
 
     this.items = [];
     this.saveCart();

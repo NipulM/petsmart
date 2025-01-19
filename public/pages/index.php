@@ -62,49 +62,7 @@
             Say goodbye to the stress of running out of pet essentials. With PetSmart's flexible subscription plans, you'll get regular deliveries tailored to your needs—keeping your pets happy, healthy, and entertained all year round.
           </p>
 
-          <div class="grid grid-cols-2 gap-8">
-            <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center text-center">
-              <div class="h-18 w-full flex items-center justify-center overflow-hidden mb-4">
-                <img src="../assets/images/basic-box.webp" alt="Subscription Box" class="object-cover h-full w-full rounded-md">
-              </div>
-              <h3 class="text-2xl font-bold mb-4">Basic</h3>
-              <p class="text-gray-600 mb-6">Enjoy hassle-free pet care with a 3-month subscription. Customize your supplies and receive regular deliveries to your door.</p>
-              <div class="flex-1 flex items-center justify-center mb-6">
-                <ul>
-                  <li class="flex items-center mb-2">
-                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <span>Flexible supply updates anytime.</span>
-                  </li>
-                  <li class="flex items-center mb-2">
-                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <span>Monthly toy replacement to keep your pet entertained.</span>
-                  </li>
-                </ul>
-              </div>
-              <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded">Subscribe to Basic</button>
-            </div>
-
-            <div class="bg-white shadow-md rounded-lg p-6 flex flex-col items-center text-center">
-              <div class="h-18 w-full flex items-center justify-center overflow-hidden mb-4">
-                <img src="../assets/images/premium-box.png" alt="Subscription Box" class="object-cover h-full w-full rounded-md">
-              </div>
-              <h3 class="text-2xl font-bold mb-4">Premium</h3>
-              <p class="text-gray-600 mb-6">Simplify your pet care for an entire year with our Premium Plan. Fully managed supplies and monthly surprises!</p>
-              <div class="flex-1 flex items-center justify-center mb-6">
-                <ul>
-                  <li class="flex items-center mb-2">
-                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <span>All benefits of the Basic Plan.</span>
-                  </li>
-                  <li class="flex items-center mb-2">
-                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <span>Exclusive premium items included.</span>
-                  </li>
-                </ul>
-              </div>
-              <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded">Subscribe to Premium</button>
-            </div>
-          </div>
+          <div class="grid grid-cols-2 gap-8"></div>
 
         </div>
       </section>

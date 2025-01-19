@@ -2,6 +2,9 @@
 const fetchAllProducts =
   "http://localhost/CB011999/public/api.php/get-new-products";
 
+const fetchAllSubscriptionPlans =
+  "http://localhost/CB011999/public/api.php/get-subscription-plans";
+
 async function fetchProducts() {
   try {
     const response = await fetch(fetchAllProducts);
@@ -18,7 +21,21 @@ async function fetchProducts() {
   }
 }
 
-fetchProducts();
+async function fetchSubscriptionPlans() {
+  try {
+    const response = await fetch(fetchAllSubscriptionPlans);
+    const data = await response.json();
+
+    if (data.status === "success") {
+      renderSubscriptions(data.data);
+    } else {
+      displayError("No subscription plans found.");
+    }
+  } catch (error) {
+    console.error("Error fetching subscription plans:", error);
+    displayError("Failed to fetch subscription plans.");
+  }
+}
 
 function renderProducts(products) {
   const productGrid = document.getElementById("product-grid");
@@ -58,6 +75,75 @@ function renderProducts(products) {
     productGrid.insertAdjacentHTML("beforeend", productCard);
   });
 }
+
+function renderSubscriptions(subscriptions) {
+  // First, make sure we're selecting the correct element
+  const subscriptionGrid = document.querySelector(".grid.grid-cols-2.gap-8");
+
+  if (!subscriptionGrid) {
+    console.error("Subscription grid element not found");
+    return;
+  }
+
+  // Clear existing content
+  subscriptionGrid.innerHTML = "";
+
+  // Add each subscription
+  subscriptions.forEach((subscription) => {
+    // Parse features if they're stored as a string
+    const features =
+      typeof subscription.features === "string"
+        ? JSON.parse(subscription.features)
+        : subscription.features;
+
+    // Create the features list HTML
+    const featuresList = features
+      .map(
+        (feature) => `
+        <li class="flex items-center mb-2">
+          <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>${feature}</span>
+        </li>
+      `
+      )
+      .join("");
+
+    // Create a new div element for the subscription card
+    const subscriptionCard = document.createElement("div");
+    subscriptionCard.className =
+      "bg-white shadow-md rounded-lg p-6 flex flex-col items-center text-center h-full";
+
+    // Set the inner HTML of the card
+    subscriptionCard.innerHTML = `
+      <div class="h-48 w-full flex items-center justify-center overflow-hidden mb-4">
+        <img src="${
+          subscription.plan_type === "Basic"
+            ? "../assets/images/basic-box.webp"
+            : "../assets/images/premium-box.png"
+        }" 
+          alt="${subscription.plan_type} Subscription Box" 
+          class="object-cover h-full w-full rounded-md">
+      </div>
+      <h3 class="text-2xl font-bold mb-4">${subscription.plan_type}</h3>
+      <p class="text-gray-600 mb-6">${subscription.description}</p>
+      <div class="flex-grow flex items-center justify-center mb-6">
+        <ul class="text-left">
+          ${featuresList}
+        </ul>
+      </div>
+<button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded">
+        Subscribe to ${subscription.plan_type}
+      </button>
+    `;
+
+    subscriptionGrid.appendChild(subscriptionCard);
+  });
+}
+
+fetchProducts();
+fetchSubscriptionPlans();
 
 function displayError(message) {
   const productGrid = document.getElementById("product-grid");

@@ -151,11 +151,13 @@
     </div>
 
     <?php include '../layouts/login-modal.php'; ?>
-    <?php include '../layouts/register-modal.php'; ?>   
+    <?php include '../layouts/register-modal.php'; ?> 
+    <?php include '../layouts/subscription-modal.php'; ?>  
     
     <script defer src="../assets/js/auth/login.js"></script>
     <script defer src="../assets/js/auth/register.js"></script>
     <script defer src="../assets/js/features/cart.js"></script>
     <script defer src="../assets/js/features/profile.js"></script>
+    <script defer src="../assets/js/features/subscription.js"></script>
 </body>
 </html>

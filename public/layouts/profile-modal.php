@@ -30,6 +30,9 @@
         <button class="tab-btn px-1 py-4 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="orders">
           Orders
         </button>
+        <button class="tab-btn px-1 py-4 border-b-2 border-transparent font-medium text-yellow-500 hover:text-yellow-600 hover:border-gray-300" data-tab="subscriptionBoxes">
+          Subscription
+        </button>
       </nav>
     </div>
 
@@ -129,6 +132,9 @@
 
     <!-- Orders Tab Content -->
     <div id="ordersTab" class="tab-content py-4 hidden space-y-3">
+    </div>
+    
+    <div id="subscriptionBoxesTab" class="tab-content py-4 hidden space-y-3">
     </div>
 
     <!-- Save Button -->
