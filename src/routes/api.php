@@ -151,7 +151,20 @@ class Api {
                 if (isset($_GET['id'])) {
                     echo json_encode($this->productController->deleteProductById(intval($_GET['id'])));
                 }
+                break; 
+
+            case 'get-all-subscription-boxes':
+                echo json_encode($this->subscriptionController->getAll());
                 break;    
+                
+            case 'save-subscription-box':
+                $data = json_decode(file_get_contents('php://input'), true);
+                echo json_encode($this->subscriptionController->saveSubscriptionBox($data));
+                break;
+
+            case 'get-user-subscription-boxes':
+                echo json_encode($this->subscriptionController->getUserSubscriptionBoxes());
+                break;
             
             case 'get-latest-blog':
                 echo json_encode($this->blogController->getLatestBlog());
