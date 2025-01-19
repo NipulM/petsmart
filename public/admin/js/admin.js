@@ -35,6 +35,9 @@ function checkAuth() {
 checkAuth();
 
 const productsContainer = document.getElementById("products-container");
+const subscriptionsContainer = document.getElementById(
+  "subscriptions-container"
+);
 const ordersContainer = document.getElementById("orders-container");
 const categoriesContainer = document.getElementById("add-new-category");
 const blogContainer = document.getElementById("blog-container");
@@ -496,6 +499,190 @@ async function loadCategories() {
   categoriesContainer.innerHTML = addNewCategoryBtn;
 }
 
+async function loadSubscriptions() {
+  try {
+    // Fetch both subscription boxes and plans data
+    const [subscriptionResponse, plansResponse] = await Promise.all([
+      fetch(
+        "http://localhost/CB011999/public/api.php/get-all-subscription-boxes"
+      ),
+      fetch("http://localhost/CB011999/public/api.php/get-subscription-plans"),
+    ]);
+
+    const subscriptionData = await subscriptionResponse.json();
+    const plansData = await plansResponse.json();
+
+    const subscriptionBoxes = subscriptionData.data;
+    const subscriptionPlans = plansData.data;
+
+    // Create a map of subscription_id to plan_type for easy lookup
+    const planTypeMap = subscriptionPlans.reduce((map, plan) => {
+      map[plan.subscription_id] = plan.plan_type;
+      return map;
+    }, {});
+
+    // Set up the container structure
+    subscriptionsContainer.innerHTML = `
+      <div class="grid grid-cols-1 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h2 class="text-xl font-bold mb-4">Subscription Analytics</h2>
+          <div id="subscriptionsPieChart" style="height: 300px;"></div>
+        </div>
+        <div id="subscription-boxes" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        </div>
+      </div>
+    `;
+
+    // Process data for pie chart
+    const subscriptionStats = {};
+    subscriptionBoxes.forEach((box) => {
+      const planType = planTypeMap[box.subscription_id] || "Unknown Plan";
+      subscriptionStats[planType] = (subscriptionStats[planType] || 0) + 1;
+    });
+
+    // Create pie chart data
+    const pieData = {
+      values: Object.values(subscriptionStats),
+      labels: Object.keys(subscriptionStats),
+      type: "pie",
+    };
+
+    // Create pie chart
+    Plotly.newPlot("subscriptionsPieChart", [pieData], {
+      title: "Subscription Distribution",
+      margin: { t: 30, b: 0, l: 0, r: 0 },
+      showlegend: true,
+      legend: { orientation: "h", y: -0.1 },
+    });
+
+    // Create subscription boxes display
+    const boxesHTML = subscriptionBoxes
+      .map((box) => {
+        const nextDeliveryDate = new Date(box.start_date);
+        nextDeliveryDate.setMonth(nextDeliveryDate.getMonth() + 1);
+
+        return `
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer" 
+                onclick='showSubscriptionDetails(${JSON.stringify({
+                  ...box,
+                  plan_type: planTypeMap[box.subscription_id],
+                }).replace(/'/g, "&apos;")})'> 
+              <div class="flex justify-between items-start mb-3">
+                <div>
+                  <h3 class="font-semibold text-lg">${
+                    planTypeMap[box.subscription_id] || "Unknown"
+                  } Plan</h3>
+                  <p class="text-gray-600">Customer Name: ${
+                    box.customer_name
+                  }</p>
+                </div>
+                <span class="px-2 py-1 rounded-full text-sm ${
+                  box.status === "active"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-red-100 text-red-800"
+                }">
+                  ${box.status}
+                </span>
+              </div>
+              
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Total Amount:</span>
+                  <span class="font-medium">$${box.total_amount}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Next Delivery:</span>
+                  <span class="font-medium">${nextDeliveryDate.toLocaleDateString()}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Items in Box:</span>
+                  <span class="font-medium">${
+                    box.order_items.length
+                  } items</span>
+                </div>
+              </div>
+            </div>
+          `;
+      })
+      .join("");
+
+    document.getElementById("subscription-boxes").innerHTML = boxesHTML;
+  } catch (error) {
+    console.error("Error loading subscriptions:", error);
+  }
+}
+
+function showSubscriptionDetails(subscription) {
+  const modalHTML = `
+    <div id="subscriptionDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white p-6 rounded-lg w-full max-w-4xl max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">${
+            subscription.plan_type || "Unknown"
+          } Plan Details</h2>
+          <button onclick="closeModal('subscriptionDetailsModal')" class="text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-6">
+          <div class="grid grid-cols-2 gap-4 border-b pb-4">
+            <div>
+              <p class="text-gray-600">Plan Type: <span class="text-black">${
+                subscription.plan_type || "Unknown"
+              }</span></p>
+              <p class="text-gray-600">Customer Name: <span class="text-black">${
+                subscription.customer_name
+              }</span></p>
+              <p class="text-gray-600">Status: <span class="text-black">${
+                subscription.status
+              }</span></p>
+            </div>
+            <div>
+              <p class="text-gray-600">Start Date: <span class="text-black">${new Date(
+                subscription.start_date
+              ).toLocaleDateString()}</span></p>
+              <p class="text-gray-600">Expiry Date: <span class="text-black">${new Date(
+                subscription.expiry_date
+              ).toLocaleDateString()}</span></p>
+              <p class="text-gray-600">Total Amount: <span class="text-black">$${
+                subscription.total_amount
+              }</span></p>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-semibold mb-3">Subscription Items</h3>
+            <div class="space-y-4">
+              ${subscription.order_items
+                .map(
+                  (item) => `
+                <div class="flex items-start gap-4 border-b pb-4">
+                  <img src="${item.image_url}" alt="${item.name}" class="w-20 h-20 object-cover rounded">
+                  <div class="flex-1">
+                    <h4 class="font-medium">${item.name}</h4>
+                    <p class="text-sm text-gray-600">${item.short_description}</p>
+                    <div class="mt-2 flex justify-between">
+                      <span>Quantity: ${item.quantity}</span>
+                      <span class="font-medium">$${item.price}</span>
+                    </div>
+                  </div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+}
+
 async function openCategoryModal() {
   const modalHTML = `
             <div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -850,6 +1037,7 @@ function showSection(sectionId) {
   const sections = [
     "dashboard-content",
     "products-container",
+    "subscriptions-container",
     "orders-container",
     "categories-container",
     "blog-container",
@@ -909,6 +1097,13 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     showSection("categories-container");
   });
+
+  document
+    .getElementById("subscriptions-link")
+    .addEventListener("click", (e) => {
+      e.preventDefault();
+      showSection("subscriptions-container");
+    });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -927,4 +1122,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .querySelector('a[href="#categories"]')
     .addEventListener("click", loadCategories);
+
+  document
+    .querySelector('a[href="#subscriptions"]')
+    .addEventListener("click", loadSubscriptions);
 });

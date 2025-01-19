@@ -28,6 +28,7 @@
             <nav class="mt-4 flex-grow">
                 <a href="#dashboard" id="dashboard-link" class="block px-4 py-2 bg-gray-100">Dashboard</a>
                 <a href="#products" id="products-link" class="block px-4 py-2 hover:bg-gray-100">Products</a>
+                <a href="#subscriptions" id="subscriptions-link" class="block px-4 py-2 hover:bg-gray-100">Subscriptions</a>
                 <a href="#orders" id="orders-link" class="block px-4 py-2 hover:bg-gray-100">Orders</a>
                 <a href="#categories" id="categories-link" class="block px-4 py-2 hover:bg-gray-100">Categories</a>
                 <a href="#blogs" id="blogs-link" class="block px-4 py-2 hover:bg-gray-100">Blogs</a>
@@ -101,6 +102,13 @@
             </div>
 
             <div id="products-container" class="hidden">
+            </div>
+
+            <div id="subscriptions-container" class="hidden">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-4">Subscription Stats</h3>
+                        <div id="subscriptionsPieChart" style="height: 300px;"></div>
+                    </div>
             </div>
 
             <div id="orders-container" class="hidden">
