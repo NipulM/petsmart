@@ -19,6 +19,12 @@ function saveCartItems(items) {
 }
 
 function addToCart(productDetails) {
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  if (isLoggedIn !== "true") {
+    showNotification("Please log in to add items to the cart", "error");
+    return;
+  }
+
   const itemQuantity = getItemQuantity();
   if (!productDetails || !Array.isArray(productDetails)) {
     console.error("Invalid product details");

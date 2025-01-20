@@ -160,6 +160,13 @@ function saveCartItems(items) {
 }
 
 function addToCart(productDetails) {
+  // check if theres a isLogged in attribute in the local storage is true
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  if (isLoggedIn !== "true") {
+    showNotification("Please log in to add items to the cart", "error");
+    return;
+  }
+
   const itemQuantity = 1;
   if (!productDetails || !Array.isArray(productDetails)) {
     console.error("Invalid product details");
