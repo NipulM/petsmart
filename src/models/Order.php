@@ -3,6 +3,7 @@
 class Order {
     private $db;
     private $table = 'orders';
+    private $productsTable = 'products';
     private $userModel;
 
     public function __construct() {
@@ -133,8 +134,19 @@ class Order {
 
             if ($stmt->execute()) {
                 $orderId = $stmt->insert_id;
-    
-                // TODO: - Updating product stock quantities
+            
+                // Update product stock quantities
+                if (is_array($data['items'])) {
+                    foreach ($data['items'] as $item) {
+                        $updateSql = "UPDATE {$this->productsTable} SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+                        $updateStmt = $this->db->prepare($updateSql);
+                        if ($updateStmt) {
+                            $updateStmt->bind_param("ii", $item['quantity'], $item['id']);
+                            $updateStmt->execute();
+                            $updateStmt->close();
+                        }
+                    }
+                }
                 
                 return [
                     "status" => "success",
